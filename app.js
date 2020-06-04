@@ -92,10 +92,10 @@ app.use((req, res, next) => {
   if (req.path === '/api/upload') {
     // Multer multipart/form-data handling needs to occur before the Lusca CSRF check.
     next();
-  }
-  // else {
+  } else {
+    next();
   //   lusca.csrf()(req, res, next);
-  // }
+  }
 });
 // app.use(lusca.xframe('SAMEORIGIN'));
 // app.use(lusca.xssProtection(true));
