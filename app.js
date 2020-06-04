@@ -12,6 +12,7 @@ const MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
 const flash = require('express-flash');
 const path = require('path');
+const util = require('util');
 const passport = require('passport');
 const sass = require('node-sass-middleware');
 // const multer = require('multer');
@@ -33,14 +34,14 @@ const { HttpCodes } = require('./controllers/utils/error');
  * Controllers (route handlers).
  */
 const homeController = require('./controllers/home');
-// const userController = require('./controllers/user');
+const userController = require('./controllers/user');
 // const apiController = require('./controllers/api');
 // const contactController = require('./controllers/contact');
 
 /**
  * API keys and Passport configuration.
  */
-// const passportConfig = require('./config/passport');
+const { isAuthorized } = require('./config/passport');
 
 /**
  * Create Express server.
@@ -125,13 +126,23 @@ app.use('/js/lib', express.static(path.join(__dirname, 'node_modules/bootstrap/d
 app.use('/js/lib', express.static(path.join(__dirname, 'node_modules/jquery/dist'), { maxAge: 31557600000 }));
 app.use('/webfonts', express.static(path.join(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts'), { maxAge: 31557600000 }));
 
+
+app.use((req, res, next) => {
+  logger.info(`--Request ${req.connection.remoteAddress} ${req.method} ${req.originalUrl} args: ${util.inspect(req.query)}`);
+  next();
+});
+
 /**
  * Primary app routes.
  */
 app.get('/', homeController.index);
+app.get('/admin-signup', userController.getAdminSignup);
+app.post('/admin-signup', userController.postAdminSignup);
+app.get('/admin-login', userController.getAdminLogin);
+app.post('/admin-login', userController.postAdminLogin);
+app.get('/logout', userController.logout);
 // app.get('/login', userController.getLogin);
 // app.post('/login', userController.postLogin);
-// app.get('/logout', userController.logout);
 // app.get('/forgot', userController.getForgot);
 // app.post('/forgot', userController.postForgot);
 // app.get('/reset/:token', userController.getReset);
