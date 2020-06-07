@@ -136,6 +136,8 @@ app.use((req, res, next) => {
  * Primary app routes.
  */
 app.get('/', homeController.index);
+app.get('/dashboard', homeController.dashboard);
+app.get('/screens', homeController.dashboardScreens);
 app.get('/admin-signup', userController.getAdminSignup);
 app.post('/admin-signup', userController.postAdminSignup);
 app.get('/admin-login', userController.getAdminLogin);
