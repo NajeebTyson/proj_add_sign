@@ -39,7 +39,7 @@
                                 <div class="col-md-4">
                                     <h2>Your Playlists</h2>
                                 </div>
-                                <div class="col-md-8"><a class="btn btn-primary float-right" href="#"><i class="fa fa-plus" aria-hidden="true"></i> &nbsp;Add Playlist </a></div>
+                                <div class="col-md-8"><a class="btn btn-primary float-right" href="#" data-toggle="modal" data-target="#addPlaylistModal"><i class="fa fa-plus" aria-hidden="true"></i> &nbsp;Add Playlist </a></div>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -141,6 +141,22 @@
                 </div>
             </div>
         </main>
+    </div>
+</div>
+<!--modal-->
+<div class="modal" id="addPlaylistModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Playlist</h5> <button type="button" class="close" data-dismiss="modal"> <span>×</span> </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group"> <input name="playlistName" type="text" class="form-control" placeholder="Enter playlist name"> </div>
+                </form>
+            </div>
+            <div class="modal-footer"> <button type="button" class="btn btn-primary">Add</button> <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> </div>
+        </div>
     </div>
 </div>
 

@@ -127,7 +127,7 @@ exports.postAdminSignup = (req, res, next) => {
  */
 exports.getAdminLogin = (req, res) => {
   if (req.user) {
-    return res.redirect('/');
+    return res.redirect('/dashboard');
   }
   res.render('account/admin_login', {
     title: 'Login'
@@ -158,7 +158,7 @@ exports.postAdminLogin = (req, res, next) => {
     req.logIn(user, (err) => {
       if (err) { return next(err); }
       req.flash('success', { msg: 'Success! You are logged in.' });
-      res.redirect(req.session.returnTo || '/');
+      res.redirect(req.session.returnTo || '/dashboard');
     });
   })(req, res, next);
 };
