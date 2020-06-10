@@ -12,11 +12,12 @@ router.route('/')
     if (validator.isEmpty(req.body.playlist.name)) {
       return next(new BadRequestError('Playlist name is not valid'));
     }
+    const playlistName = req.body.playlist.name.toLowerCase();
     const playlist = new Playlist({
-      name: req.body.playlist.name,
+      name: playlistName,
       media: []
     });
-    Playlist.findOne({ name: req.body.playlist.name }, (err, existingMedia) => {
+    Playlist.findOne({ name: playlistName }, (err, existingMedia) => {
       if (err) {
         return next(err);
       }
@@ -35,7 +36,25 @@ router.route('/')
   })
   .get((req, res, next) => {
     const { query } = req;
+    if (query.name !== undefined) {
+      query.name = query.name.toLowerCase();
+    }
     Playlist.find(query, (err, data) => {
+      if (err) {
+        return next(err);
+      }
+      res.json({
+        status: true,
+        data
+      });
+    });
+  })
+  .delete((req, res, next) => {
+    const { query } = req;
+    if (query.name !== undefined) {
+      query.name = query.name.toLowerCase();
+    }
+    Playlist.deleteMany(query, (err, data) => {
       if (err) {
         return next(err);
       }

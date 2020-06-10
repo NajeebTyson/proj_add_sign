@@ -4,6 +4,9 @@
 // const { google } = require('googleapis');
 // const validator = require('validator');
 
+const { BadRequestError } = require('./utils/error');
+const Media = require('../models/Media');
+
 /**
  * GET /api
  * List of API examples.
@@ -41,7 +44,32 @@ exports.getFileUpload = (req, res) => {
   });
 };
 
-exports.postFileUpload = (req, res) => {
-  req.flash('success', { msg: 'File was uploaded successfully.' });
-  res.redirect('/api/upload');
+exports.postFileUpload = (req, res, next) => {
+  const { files } = req;
+  if (!files) {
+    return next(new BadRequestError('Files not uploaded'));
+  }
+  const tasks = [];
+  // eslint-disable-next-line no-restricted-syntax
+  for (const file of files) {
+    const media = new Media({
+      name: file.originalname,
+      encoding: file.encoding,
+      type: file.mimetype.substring(0, file.mimetype.search('/')),
+      extension: file.mimetype.substring(file.mimetype.search('/') + 1),
+      path: file.path,
+      saved_name: file.filename,
+      size: file.size
+    });
+    tasks.push(media.save());
+  }
+  Promise.all(tasks).then((value) => {
+    res.json({
+      status: true,
+      data: value
+    });
+  })
+    .catch((err) => {
+      next(new BadRequestError(err));
+    });
 };

@@ -155,3 +155,20 @@
 .media-list-item {
     margin: 2px;
 }
+
+.file-upload {
+    position: relative;
+    background: linear-gradient(to right, lightblue 50%, transparent 50%);
+    background-size: 200% 100%;
+    background-position: right bottom;
+    transition:all 1s ease;
+}
+.file-upload.done {
+    background: lightgreen;
+}
+.file-upload a {
+    display: block;
+    position: relative;
+    padding: 5px;
+    color: black;
+}
