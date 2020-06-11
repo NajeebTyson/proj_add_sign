@@ -152,6 +152,10 @@
     color: white;
 }
 
+.card-header a {
+    margin-left: 5px;
+}
+
 .media-list-item {
     margin: 2px;
     width: 60px;
@@ -192,3 +196,58 @@
     padding: 5px;
     color: black;
 }
+
+#mediaThumbnail {
+    max-height: 200px;
+    overflow: hidden;
+}
+
+/*=== Image Light Room ====*/
+.JesterBox div
+{
+    visibility: hidden;
+    position: fixed;
+    top: 5%; right: 5%; bottom: 5%; left: 5%;
+    z-index: 75;
+    text-align: center;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.JesterBox div:before
+{
+    content: '';
+    position: fixed;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: 74;
+
+    background-color: rgba(0, 0, 0, 0);
+    transition: all 0.5s ease-out;
+}
+
+.JesterBox div img
+{
+    position: relative;
+    z-index: 77;
+    max-width: 100%;
+    max-height: 100%;
+
+    margin-left: -9999px;
+    opacity: 0;
+    transition-property: all, opacity;
+    transition-duration: 0.5s, 0.2s;
+    transition-timing-function: ease-in-out, ease-out;
+}
+
+.JesterBox div:target { visibility: visible; }
+
+.JesterBox div:target:before { background-color: rgba(0, 0, 0, 0.7); }
+
+.JesterBox div:target img
+{
+    margin-left: 0px;
+    opacity: 1;
+}
+/*=== End Light Room ======*/

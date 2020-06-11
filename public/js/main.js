@@ -16,6 +16,23 @@ $(document).ready(() => {
     $.notify({ message }, { type: 'success' });
   }
   // ================== FUNCTIONS ==============================
+  // bytes to readable data unit
+  function bytesToStr(bytes_) {
+    let res = '';
+    const kbs = bytes_ / 1024;
+    if (kbs > 1024) {
+      const mbs = kbs / 1024;
+      if (mbs > 1024) {
+        res = `${(mbs / 1024).toFixed(2)} GB`;
+      } else {
+        res = `${mbs.toFixed(2)} MB`;
+      }
+    } else {
+      res = `${kbs.toFixed(2)} KB`;
+    }
+    return res;
+  }
+
   // add playlist
   async function addPlaylist(playlistName) {
     await $.post('/api/playlist', { playlist: { name: playlistName } })
@@ -40,6 +57,11 @@ $(document).ready(() => {
       .fail(function (err) {
         notifyDanger(err.responseJSON.error);
       });
+  }
+
+  // get media
+  function getMedia(query) {
+    return $.get('/api/media', { ...query });
   }
 
   // get media by list of ids
@@ -90,6 +112,7 @@ $(document).ready(() => {
           let htm = `<div class="col-6 col-md-4 col-lg-2 p-0 media-list-item" data-mediaid=${mediaItem._id}>`;
           if (mediaItem.type === 'image') {
             htm += ` <img class="img-fluid d-block" src="/static/media/${mediaItem.saved_name}">`;
+            htm += `<a href="#" class="JesterBox"><div id="${mediaItem._id}"><img src="/static/media/${mediaItem.saved_name}"></div>`;
           } else if (mediaItem.type === 'video') {
             htm += `<div class="embed-responsive embed-responsive-16by9" ><video src="/static/media/${mediaItem.saved_name}" class="embed-responsive-item"> Your browser does not support HTML5 video. </video></div>`;
             htm += '<i class="fa fa-play" aria-hidden="true"></i>';
@@ -128,6 +151,8 @@ $(document).ready(() => {
   const $inputMediaFile = $('#inputMediaFile');
   const $uploadedFiles = $('#uploadedFiles');
   const $inputHiddenPlaylist = $('#inputHiddenPlaylist');
+  const $mediaThumbnail = $('#mediaThumbnail');
+  const $mediaInformation = $('#mediaInformation');
 
   // accordian for playlist
   $('.sidebar-dropdown > a').click(function () {
@@ -203,8 +228,31 @@ $(document).ready(() => {
   });
 
   // load media
-  $playlistAccordion.on('click', '.media-list-item', function () {
+  $playlistAccordion.on('click', '.media-list-item', async function () {
     const mediaId = $(this).data('mediaid');
-    console.log(mediaId);
+    try {
+      const data = await getMedia({ _id: mediaId });
+      const media = data.data[0];
+      let thumbnailHtml = '';
+      if (media.type === 'image') {
+        thumbnailHtml = `<a href="#${media._id}"><img class="img-fluid d-block" src="/static/media/${media.saved_name}" height="50px"></a>`;
+      } else if (media.type === 'video') {
+        thumbnailHtml = '<div class="embed-responsive embed-responsive-16by9">'
+          + `<video src="/static/media/${media.saved_name}" class="embed-responsive-item" controls="controls"> Your browser does not support HTML5 video. </video>`
+          + '</div>';
+      } else {
+        thumbnailHtml = '<h3>Unsupported content</h3>';
+      }
+      $mediaThumbnail.html(thumbnailHtml);
+      const mediaInfoHtml = ''
+        + `<a>Name: ${media.name}</a> <br>`
+        + `<a>Type: ${media.type}</a> <br>`
+        + `<a>Date: ${(new Date(media.createdAt)).toUTCString()}</a> <br>`
+        + `<a>Size: ${bytesToStr(media.size)}</a> <br>`;
+      $mediaInformation.html(mediaInfoHtml);
+    } catch (err) {
+      $mediaThumbnail.html('<h3>Error! Unable to load content</h3>');
+      $mediaInformation.html(`<a>Error: ${err}</a>`);
+    }
   });
 });
