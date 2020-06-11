@@ -154,6 +154,26 @@
 
 .media-list-item {
     margin: 2px;
+    width: 60px;
+    height: 90px;
+    max-height: 90px;
+    border: 1px solid #5a5a5a;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.media-list-item:first-child {
+    height: 100%;
+    width: 100%;
+}
+
+.media-list-item > i {
+    top: 40%;
+    position: absolute;
+    left: 40%;
+    right: 50%;
+    font-size: 30px;
+    color: #12bbad;
 }
 
 .file-upload {

@@ -42,6 +42,11 @@ $(document).ready(() => {
       });
   }
 
+  // get media by list of ids
+  function getMediaByIds(ids) {
+    return $.post('/api/media/ids', { media: { ids } });
+  }
+
   // get playlist
   async function getPlaylist(query) {
     return new Promise(function (res, rej) {
@@ -56,36 +61,50 @@ $(document).ready(() => {
   }
 
   // get playlist card
-  function getPlaylistCard(playlist) {
-    return `
-      <div class="card">
-        <div class="card-header" id="${playlist._id}">
-            <h2 class="mb-0">
-                <button class="btn btn-link float-left" type="button" data-toggle="collapse" data-target="#collapse_${playlist._id}" aria-expanded="true" aria-controls="collapse_${playlist._id}"> ${playlist.name} </button>
-            </h2>
-            <a class="btn btn-primary float-right btn-sm deletePlaylist" data-playlistid="${playlist._id}" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i> &nbsp;Delete </a>
-            <a class="btn btn-primary float-right btn-sm addMediaToPlaylist" data-playlistid="${playlist._id}" data-playlistname="${playlist.name}" href="#"  data-toggle="modal" data-target="#addMediaModal">
-                <i class="fa fa-plus" aria-hidden="true"></i>
-                 &nbsp;Add Media 
-            </a>
-        </div>
-        <div id="collapse_${playlist._id}" class="collapse" aria-labelledby="${playlist._id}" data-parent="#accordionPlaylist">
-            <div class="card-body">
-                <div class="container-fluid media-list">
-                    <div class="row">
-                        <div class="col-6 col-md-4 col-lg-2 p-0 media-list-item"> <img class="img-fluid d-block" src="https://static.pingendo.com/cover-bubble-light.svg"> </div>
-                        <div class="col-6 col-md-4 col-lg-2 p-0 media-list-item"> <img class="img-fluid d-block" src="https://static.pingendo.com/cover-moon.svg"> </div>
-                        <div class="col-6 col-md-4 col-lg-2 p-0 media-list-item"> <img class="img-fluid d-block" src="https://static.pingendo.com/cover-bubble-light.svg"> </div>
-                        <div class="col-6 col-md-4 col-lg-2 p-0 media-list-item"> <img class="img-fluid d-block" src="https://static.pingendo.com/cover-bubble-dark.svg"> </div>
-                        <div class="col-6 col-md-4 col-lg-2 p-0 media-list-item"> <img class="img-fluid d-block" src="https://static.pingendo.com/cover-moon.svg"> </div>
-                        <div class="col-6 col-md-4 col-lg-2 p-0 media-list-item"> <img class="img-fluid d-block" src="https://static.pingendo.com/cover-bubble-light.svg"> </div>
-                        <div class="col-6 col-md-4 col-lg-2 p-0 media-list-item"> <img class="img-fluid d-block" src="https://static.pingendo.com/cover-bubble-light.svg"> </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>    
-    `;
+  async function getPlaylistCard(playlist) {
+    const finalHtml = ''
+      + '<div class="card">'
+      + `  <div class="card-header" id="${playlist._id}">`
+      + '      <h2 class="mb-0">'
+      + `         <button class="btn btn-link float-left" type="button" data-toggle="collapse" data-target="#collapse_${playlist._id}" aria-expanded="true" aria-controls="collapse_${playlist._id}"> ${playlist.name} </button>`
+      + '      </h2>'
+      + `      <a class="btn btn-primary float-right btn-sm deletePlaylist" data-playlistid="${playlist._id}" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i> &nbsp;Delete </a>`
+      + `      <a class="btn btn-primary float-right btn-sm addMediaToPlaylist" data-playlistid="${playlist._id}" data-playlistname="${playlist.name}" href="#"  data-toggle="modal" data-target="#addMediaModal">`
+      + '          <i class="fa fa-plus" aria-hidden="true"></i>'
+      + '           &nbsp;Add Media'
+      + '      </a>'
+      + '  </div>'
+      + `  <div id="collapse_${playlist._id}" class="collapse" aria-labelledby="${playlist._id}" data-parent="#accordionPlaylist">`
+      + '      <div class="card-body">'
+      + '          <div class="container-fluid media-list">'
+      + '              <div class="row">';
+      // + '                  <div class="col-6 col-md-4 col-lg-2 p-0 media-list-item"> <img class="img-fluid d-block" src="https://static.pingendo.com/cover-bubble-light.svg"> </div>';
+    const endingHtml = '</div></div></div></div></div> ';
+
+    const mediaLength = playlist.media.length;
+    let mediaHtml = '';
+    if (mediaLength) {
+      try {
+        const mediaData = await getMediaByIds(playlist.media);
+        mediaData.data.forEach(function (mediaItem) {
+          let htm = `<div class="col-6 col-md-4 col-lg-2 p-0 media-list-item" data-mediaid=${mediaItem._id}>`;
+          if (mediaItem.type === 'image') {
+            htm += ` <img class="img-fluid d-block" src="/static/media/${mediaItem.saved_name}">`;
+          } else if (mediaItem.type === 'video') {
+            htm += `<div class="embed-responsive embed-responsive-16by9" ><video src="/static/media/${mediaItem.saved_name}" class="embed-responsive-item"> Your browser does not support HTML5 video. </video></div>`;
+            htm += '<i class="fa fa-play" aria-hidden="true"></i>';
+          }
+          htm += '</div>';
+          mediaHtml += htm;
+        });
+        return finalHtml + mediaHtml + endingHtml;
+      } catch (err) {
+        mediaHtml = `Error: ${err}`;
+      }
+    } else {
+      mediaHtml = '<p class="font-italic">No media</p>';
+    }
+    return finalHtml + mediaHtml + endingHtml;
   }
 
   // display playlist
@@ -94,8 +113,8 @@ $(document).ready(() => {
     playlist.then(function (data) {
       const $listPlaylist = $('#accordionPlaylist');
       $listPlaylist.html('');
-      data.forEach(function (playlist) {
-        $listPlaylist.append(getPlaylistCard(playlist));
+      data.forEach(async function (playlist) {
+        $listPlaylist.append(await getPlaylistCard(playlist));
       });
     }).catch(function (err) {
       notifyDanger(err.responseJSON.error);
@@ -105,7 +124,6 @@ $(document).ready(() => {
 
   // ================== MAIN ===================================
   const $playlistAccordion = $('#accordionPlaylist');
-  const $mediaModal = $('#addMediaModal');
   const $titleMediaAddModal = $('#titleMediaAddModal');
   const $inputMediaFile = $('#inputMediaFile');
   const $uploadedFiles = $('#uploadedFiles');
@@ -182,5 +200,11 @@ $(document).ready(() => {
       // .find('a')
       // .prop('href', data.result.files[0].url);
     }
+  });
+
+  // load media
+  $playlistAccordion.on('click', '.media-list-item', function () {
+    const mediaId = $(this).data('mediaid');
+    console.log(mediaId);
   });
 });

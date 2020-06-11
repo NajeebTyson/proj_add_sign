@@ -42,6 +42,7 @@ const apiController = require('./controllers/api');
  */
 const { isAuthorized } = require('./config/passport');
 const playlistApi = require('./controllers/playlist');
+const mediaApi = require('./controllers/media');
 
 /**
  * Create Express server.
@@ -116,6 +117,7 @@ app.use('/static/jquery/', express.static(path.join(__dirname, 'node_modules/jqu
 app.use('/static/webfonts', express.static(path.join(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts'), { maxAge: 31557600000 }));
 app.use('/static/bootstrap-notify/', express.static(path.join(__dirname, 'node_modules/bootstrap-notify'), { maxAge: 31557600000 }));
 app.use('/static/blueimp-file-upload/', express.static(path.join(__dirname, 'node_modules/blueimp-file-upload'), { maxAge: 31557600000 }));
+app.use('/static/media/', express.static(path.join(__dirname, 'uploads'), { maxAge: 31557600000 }));
 
 
 app.use((req, res, next) => {
@@ -158,6 +160,7 @@ app.get('/logout', userController.logout);
  * API examples routes.
  */
 app.use('/api/playlist', playlistApi);
+app.use('/api/media', mediaApi);
 // eslint-disable-next-line max-len
 // app.get('/api/facebook', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFacebook);
 // app.get('/api/upload', lusca({ csrf: true }), apiController.getFileUpload);
