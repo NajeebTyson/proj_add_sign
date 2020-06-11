@@ -106,10 +106,10 @@ $(document).ready(() => {
   // ================== MAIN ===================================
   const $playlistAccordion = $('#accordionPlaylist');
   const $mediaModal = $('#addMediaModal');
-  const $btnUploadMedia = $('#btnAddMedia');
   const $titleMediaAddModal = $('#titleMediaAddModal');
   const $inputMediaFile = $('#inputMediaFile');
   const $uploadedFiles = $('#uploadedFiles');
+  const $inputHiddenPlaylist = $('#inputHiddenPlaylist');
 
   // accordian for playlist
   $('.sidebar-dropdown > a').click(function () {
@@ -158,25 +158,11 @@ $(document).ready(() => {
   $playlistAccordion.on('click', '.addMediaToPlaylist', function () {
     const playlistId = $(this).data('playlistid');
     const playlistName = $(this).data('playlistname');
-    $btnUploadMedia.data('playlistid', playlistId);
     $titleMediaAddModal.html(`Playlist: ${playlistName} | Add Media`);
+    $inputHiddenPlaylist.val(playlistId);
   });
 
   // upload media
-  // $btnUploadMedia.click(function () {
-  //   //   const playlistId = $btnUploadMedia.data('playlistid');
-  //   //   const formData = new FormData();
-  //   //   formData.append('mediaFile', $inputMediaFile[0].files[0]);
-  //   //   console.log(formData);
-  //   //   // $.ajax({
-  //   //   //   url: '',
-  //   //   //   type: 'post',
-  //   //   //   enctype: 'multipart/form-data',
-  //   //   //   processData: false,
-  //   //   //   contentType: false,
-  //   //   //   data: formData
-  //   //   // })
-  //   // });
   $inputMediaFile.fileupload({
     dataType: 'json',
     multipart: true,
