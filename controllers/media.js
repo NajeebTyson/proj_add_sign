@@ -1,13 +1,26 @@
 const router = require('express').Router();
 const _ = require('lodash');
+const fs = require('fs');
+const path = require('path');
 
 const Media = require('../models/Media');
-const { BadRequestError } = require('./utils/error');
+const { removeMediasFromPlaylists } = require('./playlist');
+const { BadRequestError, ForbiddenError } = require('./utils/error');
 const { strToObjectId } = require('./utils/utils');
+
+const deleteMediaContent = async (names) => {
+  _.forEach(names, (mediaName) => {
+    fs.unlinkSync(path.join('./uploads', mediaName));
+  });
+};
+
 
 router.route('/')
   .get((req, res, next) => {
     const { query } = req;
+    if (!query) {
+      return next(new ForbiddenError('No query to get media'));
+    }
     Media.find(query, (err, data) => {
       if (err) {
         return next(err);
@@ -20,13 +33,28 @@ router.route('/')
   })
   .delete((req, res, next) => {
     const { query } = req;
-    Media.deleteMany(query, (err, data) => {
-      if (err) {
-        return next(err);
+    if (!query) {
+      return next(new ForbiddenError('Forbidden to delete all media'));
+    }
+    Media.find(query, async (findErr, findData) => {
+      if (findErr) {
+        return next(findErr);
       }
-      res.json({
-        status: true,
-        data
+      const mediaNames = _.map(findData, (doc) => doc.saved_name);
+      await deleteMediaContent(mediaNames);
+      Media.deleteMany(query, (err, deleteData) => {
+        if (err) {
+          return next(err);
+        }
+        // remove it from all the playlists
+        const idsMedia = _.map(findData, (doc) => doc._id);
+        removeMediasFromPlaylists(idsMedia).then((rres) => {
+          console.log('res: ', rres);
+          res.json({
+            status: true,
+            data: deleteData
+          });
+        }).catch((err) => next(new BadRequestError(err)));
       });
     });
   });

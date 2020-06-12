@@ -159,7 +159,7 @@ app.get('/logout', userController.logout);
 /**
  * API examples routes.
  */
-app.use('/api/playlist', playlistApi);
+app.use('/api/playlist', playlistApi.router);
 app.use('/api/media', mediaApi);
 // eslint-disable-next-line max-len
 // app.get('/api/facebook', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFacebook);

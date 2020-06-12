@@ -1,8 +1,25 @@
 const router = require('express').Router();
 const validator = require('validator');
+const _ = require('lodash');
 
 const Playlist = require('../models/Playlist');
 const { BadRequestError } = require('./utils/error');
+
+async function removeMediasFromPlaylists(mediaIds) {
+  const ids = await _.map(mediaIds, (id) => id.toString());
+  console.log('delete form play', ids);
+  return Playlist.updateMany({}, { $pull: { media: { $in: ids } } });
+  // return new Promise((res, rej) => {
+  //   Playlist.updateMany({}, { '$pull': { 'media': { '$in': [ids] } } }, (err, data) => {
+  //     if (err) {
+  //       console.log('Err while del form play', err);
+  //       rej(err);
+  //     }
+  //     console.log('data from del play', data);
+  //     res(data);
+  //   });
+  // })
+}
 
 router.route('/')
   .post((req, res, next) => {
@@ -65,4 +82,5 @@ router.route('/')
     });
   });
 
-module.exports = router;
+module.exports.router = router;
+module.exports.removeMediasFromPlaylists = removeMediasFromPlaylists;

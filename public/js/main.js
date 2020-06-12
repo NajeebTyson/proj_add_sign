@@ -15,6 +15,17 @@ $(document).ready(() => {
   function notifySuccess(message) {
     $.notify({ message }, { type: 'success' });
   }
+  // ================== Variables ==============================
+  const $playlistAccordion = $('#accordionPlaylist');
+  const $titleMediaAddModal = $('#titleMediaAddModal');
+  const $inputMediaFile = $('#inputMediaFile');
+  const $uploadedFiles = $('#uploadedFiles');
+  const $inputHiddenPlaylist = $('#inputHiddenPlaylist');
+  const $mediaThumbnail = $('#mediaThumbnail');
+  const $mediaInformation = $('#mediaInformation');
+  const $mediaDeleteLocation = $('#mediaDeleteLocation');
+  const $rightSideBar = $('#rightSideBar');
+  // ================== End Variables ==========================
   // ================== FUNCTIONS ==============================
   // bytes to readable data unit
   function bytesToStr(bytes_) {
@@ -69,6 +80,15 @@ $(document).ready(() => {
     return $.post('/api/media/ids', { media: { ids } });
   }
 
+  // delete media
+  function deleteMedia(query) {
+    const params = $.param({ ...query });
+    return $.ajax({
+      url: `/api/media?${params}`,
+      type: 'DELETE'
+    });
+  }
+
   // get playlist
   async function getPlaylist(query) {
     return new Promise(function (res, rej) {
@@ -90,7 +110,7 @@ $(document).ready(() => {
       + '      <h2 class="mb-0">'
       + `         <button class="btn btn-link float-left" type="button" data-toggle="collapse" data-target="#collapse_${playlist._id}" aria-expanded="true" aria-controls="collapse_${playlist._id}"> ${playlist.name} </button>`
       + '      </h2>'
-      + `      <a class="btn btn-primary float-right btn-sm deletePlaylist" data-playlistid="${playlist._id}" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i> &nbsp;Delete </a>`
+      + `      <a class="btn btn-danger float-right btn-sm deletePlaylist" data-playlistid="${playlist._id}" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i> &nbsp;Delete </a>`
       + `      <a class="btn btn-primary float-right btn-sm addMediaToPlaylist" data-playlistid="${playlist._id}" data-playlistname="${playlist.name}" href="#"  data-toggle="modal" data-target="#addMediaModal">`
       + '          <i class="fa fa-plus" aria-hidden="true"></i>'
       + '           &nbsp;Add Media'
@@ -143,16 +163,20 @@ $(document).ready(() => {
       notifyDanger(err.responseJSON.error);
     });
   }
+
+  // clean media info sidebar
+  function hideMediaInfoSidebar() {
+    $rightSideBar.addClass('d-none');
+  }
+
+  // display media info sidebar
+  function showMediaInfoSidebar() {
+    $rightSideBar.removeClass('d-none');
+  }
   // ================== FUNCTIONS END ==========================
 
   // ================== MAIN ===================================
-  const $playlistAccordion = $('#accordionPlaylist');
-  const $titleMediaAddModal = $('#titleMediaAddModal');
-  const $inputMediaFile = $('#inputMediaFile');
-  const $uploadedFiles = $('#uploadedFiles');
-  const $inputHiddenPlaylist = $('#inputHiddenPlaylist');
-  const $mediaThumbnail = $('#mediaThumbnail');
-  const $mediaInformation = $('#mediaInformation');
+  hideMediaInfoSidebar();
 
   // accordian for playlist
   $('.sidebar-dropdown > a').click(function () {
@@ -203,6 +227,8 @@ $(document).ready(() => {
     const playlistName = $(this).data('playlistname');
     $titleMediaAddModal.html(`Playlist: ${playlistName} | Add Media`);
     $inputHiddenPlaylist.val(playlistId);
+    $inputMediaFile.val('');
+    $uploadedFiles.html('');
   });
 
   // upload media
@@ -224,6 +250,7 @@ $(document).ready(() => {
         .addClass('done');
       // .find('a')
       // .prop('href', data.result.files[0].url);
+      displayPlaylist();
     }
   });
 
@@ -250,9 +277,23 @@ $(document).ready(() => {
         + `<a>Date: ${(new Date(media.createdAt)).toUTCString()}</a> <br>`
         + `<a>Size: ${bytesToStr(media.size)}</a> <br>`;
       $mediaInformation.html(mediaInfoHtml);
+      $mediaDeleteLocation.html(`<a class="btn btn-danger btn-sm fa-pull-right" id="mediaDeleteBtn" data-mediaid="${media._id}" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i> &nbsp;Delete </a>`);
+      showMediaInfoSidebar();
     } catch (err) {
       $mediaThumbnail.html('<h3>Error! Unable to load content</h3>');
       $mediaInformation.html(`<a>Error: ${err}</a>`);
+    }
+  });
+
+  // delete media
+  $mediaDeleteLocation.on('click', '#mediaDeleteBtn', async function () {
+    const mediaId = $(this).attr('data-mediaid');
+    try {
+      await deleteMedia({ _id: mediaId });
+      displayPlaylist();
+      hideMediaInfoSidebar();
+    } catch (err) {
+      notifyWarning(`Error deleting media: ${err}`);
     }
   });
 });
