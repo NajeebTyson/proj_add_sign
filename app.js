@@ -162,7 +162,7 @@ app.get('/logout', userController.logout);
  */
 app.use('/api/playlist', playlistApi.router);
 app.use('/api/media', mediaApi);
-app.use('/api/screen', screenApi);
+app.use('/api/screen', screenApi.router);
 // eslint-disable-next-line max-len
 // app.get('/api/facebook', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFacebook);
 // app.get('/api/upload', lusca({ csrf: true }), apiController.getFileUpload);

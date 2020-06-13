@@ -3,6 +3,7 @@ const validator = require('validator');
 const _ = require('lodash');
 
 const Playlist = require('../models/Playlist');
+const { deletePlaylistsFromScreens } = require('./screen');
 const { BadRequestError } = require('./utils/error');
 
 async function removeMediasFromPlaylists(mediaIds) {
@@ -61,15 +62,20 @@ router.route('/')
     if (query.name !== undefined) {
       query.name = query.name.toLowerCase();
     }
-    Playlist.deleteMany(query, (err, data) => {
-      if (err) {
-        return next(err);
-      }
-      res.json({
-        status: true,
-        data
-      });
-    });
+    Playlist
+      .find(query)
+      .then((dataFind) => {
+        const ids = _.map(dataFind, (playlistDoc) => playlistDoc._id.toString());
+        return deletePlaylistsFromScreens(ids);
+      })
+      .then(() => Playlist.deleteMany(query))
+      .then((dataDelete) => {
+        res.json({
+          status: true,
+          data: dataDelete
+        });
+      })
+      .catch((err) => next(err));
   });
 
 module.exports.router = router;

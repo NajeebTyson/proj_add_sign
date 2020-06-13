@@ -156,4 +156,7 @@ router.put('/shuffle', (req, res, next) => {
   });
 });
 
-module.exports = router;
+const deletePlaylistsFromScreens = async (playlistIds) => Screen.updateMany({ playlist_id: { $in : playlistIds } }, { $set: { playlist_id: null } });
+
+module.exports.router = router;
+module.exports.deletePlaylistsFromScreens = deletePlaylistsFromScreens;
