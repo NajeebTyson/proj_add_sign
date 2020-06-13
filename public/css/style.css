@@ -119,6 +119,10 @@
 }
 
 /*--------------------------page-content-----------------------------*/
+.tab-main-content {
+    width: 100%;
+}
+
 .dashboard-content {
     padding: 30px 40px;
 }
