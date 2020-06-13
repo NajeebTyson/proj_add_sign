@@ -31,6 +31,7 @@ $(document).ready(() => {
   const $inputScreenName = $('input[name ="screen_name"]');
   const $inputScreenCode1 = $('input[name ="screen_code_1"]');
   const $inputScreenCode2 = $('input[name ="screen_code_2"]');
+  const $switchScreenShuffle = $('#switchScreenShuffle');
   // ================== End Variables ==========================
   // ================== FUNCTIONS ==============================
   // bytes to readable data unit
@@ -215,13 +216,13 @@ $(document).ready(() => {
             <td>${screen.screen_name}</td>
             <td><span class="font-italic">${(!screen.playlist_id) ? '' : screen.playlist_id}</span></td>
             <td>
-                <i class="fa fa-play ml-2" aria-hidden="true"></i>
-                <i class="fa fa-pause ml-2" aria-hidden="true"></i>
-                <i class="fa fa-stop ml-2" aria-hidden="true"></i>
+                <i class="fa fa-play ml-2 cursor-pointer" aria-hidden="true" title="Play"></i>
+                <i class="fa fa-pause ml-2 cursor-pointer" aria-hidden="true" title="Pause"></i>
+                <i class="fa fa-stop ml-2 cursor-pointer" aria-hidden="true" title="Stop"></i>
             </td>
             <td>
-                <i class="fa fa-trash-o ml-2"></i>
-                <i class="fa fa-desktop ml-2"></i>
+                <i class="fa fa-trash-o ml-2 cursor-pointer" title="Delete screen"></i>
+                <i class="fa fa-bars ml-2 cursor-pointer" aria-hidden="true"title="Attach playlist"></i>
             </td>
             <td><span class="badge badge-info">${screen.status}</span></td>
         </tr>
@@ -361,26 +362,32 @@ $(document).ready(() => {
   $btnAddScreen.click(function () {
     if (!$inputScreenId.val()) {
       notifyDanger('Empty screen id is not acceptable');
+      return;
     }
     if (!$inputScreenName.val()) {
       notifyDanger('Empty screen name is not acceptable');
+      return;
     }
     if (!$inputScreenCode1.val()) {
       notifyDanger('Empty screen code is not acceptable');
+      return;
     }
     if ($inputScreenCode1.val() !== $inputScreenCode2.val()) {
       notifyDanger('Screen codes are not same');
+      return;
     }
     addScreen({
       screenId: $inputScreenId.val(),
       screenName: $inputScreenName.val(),
-      screenCode: $inputScreenCode1.val()
+      screenCode: $inputScreenCode1.val(),
+      screenShuffle: $switchScreenShuffle.is(':checked')
     });
-    // displayScreen();
+    displayScreen();
     $inputScreenId.val('');
     $inputScreenName.val('');
     $inputScreenCode1.val('');
     $inputScreenCode2.val('');
+    $switchScreenShuffle.prop('checked', false);
     $('#addScreenModal').modal('toggle');
   });
 });

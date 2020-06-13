@@ -5,7 +5,8 @@ const screenSchema = new mongoose.Schema({
   screen_name: String,
   screen_code: String,
   playlist_id: String,
-  status: String
+  status: String,
+  shuffle: String
 }, { timestamps: true, versionKey: false });
 
 module.exports = mongoose.model('Screen', screenSchema);

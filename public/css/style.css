@@ -254,3 +254,9 @@
     opacity: 1;
 }
 /*=== End Light Room ======*/
+
+/*=== General =============*/
+.cursor-pointer {
+    cursor: pointer;
+}
+/*=== End General =========*/

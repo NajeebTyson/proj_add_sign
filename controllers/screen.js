@@ -46,7 +46,8 @@ router.route('/')
       screen_name: screenName,
       screen_code: req.body.screen.screenCode,
       playlist_id: null,
-      status: SCREEN_STATUS.STOPPED
+      status: SCREEN_STATUS.STOPPED,
+      shuffle: req.body.screen.screenShuffle
     });
     Screen.findOne({ screen_id: screenId }, (err, existingScreen) => {
       if (err) {
