@@ -227,17 +227,50 @@ $(document).ready(() => {
     });
   }
 
+  // change screen control
+  // eslint-disable-next-line camelcase
+  function updateScreenControl(screen_id, control_status) {
+    return $.ajax({
+      url: '/api/screen/controls',
+      type: 'PUT',
+      data: {
+        screen: {
+          screenId: screen_id,
+          controlStatus: control_status
+        }
+      }
+    });
+  }
+
+  // change screen shuffle
+  // eslint-disable-next-line camelcase
+  function updateScreenShuffle(screen_id, shuffle_option) {
+    return $.ajax({
+      url: '/api/screen/shuffle',
+      type: 'PUT',
+      data: {
+        screen: {
+          screenId: screen_id,
+          shuffle: shuffle_option
+        }
+      }
+    });
+  }
+
   // display screens
   function displayScreen() {
     const screens = getScreens();
     screens.then(function (data) {
+      const controlPause = '<i class="fa fa-pause ml-2 cursor-pointer btn-screen-ctrl" data-control="paused" aria-hidden="true" title="Pause"></i>';
+      const controlStop = '<i class="fa fa-stop ml-2 cursor-pointer btn-screen-ctrl" data-control="stopped" aria-hidden="true" title="Stop"></i>';
+      const controlPlay = '<i class="fa fa-play ml-2 cursor-pointer btn-screen-ctrl" data-control="playing" aria-hidden="true" title="Play"></i>';
       $screenTable.html('');
       data.forEach(async function (screen) {
         let playlistName = '';
         if (screen.playlist_id) {
           try {
             const playlist = await getPlaylist({ _id: screen.playlist_id });
-            if (playlist) {
+            if (playlist.length > 0) {
               playlistName = playlist[0].name;
             }
           } catch (e) {
@@ -245,17 +278,24 @@ $(document).ready(() => {
             notifyWarning(`Error getting playlist info, ${e}`);
           }
         }
+        let attachmentHtml = '<i class="fa fa-random cursor-pointer btnScreenShuffle" data-shuffle="true" title="Shuffle screen media" aria-hidden="true"></i>';
+        if (screen.shuffle) {
+          attachmentHtml = '<i class="fa fa-sort-amount-asc cursor-pointer btnScreenShuffle" data-shuffle="false" title="Order screen media" aria-hidden="true"></i>';
+        }
+
+        let controlsHtml = controlPause + controlStop;
+        if (screen.status === 'paused') {
+          controlsHtml = controlPlay + controlStop;
+        } else if (screen.status === 'stopped') {
+          controlsHtml = controlPlay;
+        }
         const screenHtml = `
         <tr data-screenid="${screen._id}" data-screenname="${screen.screen_name}">
             <td>${screen.screen_name}</td>
             <td><span class="font-italic">${playlistName}</span></td>
+            <td>${controlsHtml}</td>
             <td>
-                <i class="fa fa-play ml-2 cursor-pointer" aria-hidden="true" title="Play"></i>
-                <i class="fa fa-pause ml-2 cursor-pointer" aria-hidden="true" title="Pause"></i>
-                <i class="fa fa-stop ml-2 cursor-pointer" aria-hidden="true" title="Stop"></i>
-            </td>
-            <td>
-                <i class="fa fa-random cursor-pointer btnScreenShuffle" title="Shuffle screen media" aria-hidden="true"></i>
+                ${attachmentHtml}
                 <i class="fa fa-bars ml-2 cursor-pointer btnScreenAttachPlaylist" data-toggle="modal"
                     data-target="#screenAttachPlaylistModal" aria-hidden="true" title="Attach playlist"></i>
                 <i class="fa fa-trash-o ml-2 cursor-pointer btnDeleteScreen" title="Delete screen"></i>
@@ -466,4 +506,28 @@ $(document).ready(() => {
     $('#screenAttachPlaylistModal').modal('toggle');
     displayScreen();
   });
+
+  // change screen control
+  $screenTable.on('click', '.btn-screen-ctrl', function () {
+    const controlStatus = $(this).attr('data-control');
+    const screenId = $(this).parent().parent().data('screenid');
+    updateScreenControl(screenId, controlStatus).then(function () {
+      notifySuccess('Screen control option updated');
+      displayScreen();
+    }).catch(function () {
+      notifyDanger('Error updating screen control');
+    });
+  });
+
+  // change screen shuffle
+  $screenTable.on('click', '.btnScreenShuffle', function () {
+    const shuffle = $(this).attr('data-shuffle');
+    const screenId = $(this).parent().parent().data('screenid');
+    updateScreenShuffle(screenId, shuffle).then(function () {
+      notifySuccess('Screen shuffle updated');
+      displayScreen();
+    }).catch(function () {
+      notifyDanger('Error updating screen shuffle');
+    });
+  })
 });
