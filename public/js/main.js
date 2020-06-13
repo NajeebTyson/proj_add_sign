@@ -25,6 +25,12 @@ $(document).ready(() => {
   const $mediaInformation = $('#mediaInformation');
   const $mediaDeleteLocation = $('#mediaDeleteLocation');
   const $rightSideBar = $('#rightSideBar');
+  const $btnAddScreen = $('#btnAddScreen');
+  const $screenTable = $('#screenTable');
+  const $inputScreenId = $('input[name ="screen_id"]');
+  const $inputScreenName = $('input[name ="screen_name"]');
+  const $inputScreenCode1 = $('input[name ="screen_code_1"]');
+  const $inputScreenCode2 = $('input[name ="screen_code_2"]');
   // ================== End Variables ==========================
   // ================== FUNCTIONS ==============================
   // bytes to readable data unit
@@ -173,6 +179,59 @@ $(document).ready(() => {
   function showMediaInfoSidebar() {
     $rightSideBar.removeClass('d-none');
   }
+
+  // add screen
+  async function addScreen(screenData) {
+    await $.post('/api/screen', { screen: screenData })
+      .done(function () {
+        notifySuccess(`${screenData.screenId}, screen is created`);
+      })
+      .fail(function (err) {
+        notifyDanger(err.responseJSON.error);
+      });
+  }
+
+  // get screens
+  function getScreens(query) {
+    return new Promise(function (res, rej) {
+      $.get('/api/screen', { ...query })
+        .done(function (data) {
+          res(data.data);
+        })
+        .fail(function (err) {
+          rej(err);
+        });
+    });
+  }
+
+  // display screens
+  function displayScreen() {
+    const screens = getScreens();
+    screens.then(function (data) {
+      $screenTable.html('');
+      data.forEach(function (screen) {
+        const screenHtml = `
+        <tr>
+            <td>${screen.screen_name}</td>
+            <td><span class="font-italic">${(!screen.playlist_id) ? '' : screen.playlist_id}</span></td>
+            <td>
+                <i class="fa fa-play ml-2" aria-hidden="true"></i>
+                <i class="fa fa-pause ml-2" aria-hidden="true"></i>
+                <i class="fa fa-stop ml-2" aria-hidden="true"></i>
+            </td>
+            <td>
+                <i class="fa fa-trash-o ml-2"></i>
+                <i class="fa fa-desktop ml-2"></i>
+            </td>
+            <td><span class="badge badge-info">${screen.status}</span></td>
+        </tr>
+        `;
+        $screenTable.append(screenHtml);
+      });
+    }).catch(function (err) {
+      notifyDanger(err.responseJSON.error);
+    });
+  }
   // ================== FUNCTIONS END ==========================
 
   // ================== MAIN ===================================
@@ -213,6 +272,7 @@ $(document).ready(() => {
 
   // display playlists
   displayPlaylist();
+  displayScreen();
 
   // delete playlist
   $playlistAccordion.on('click', '.deletePlaylist', function () {
@@ -295,5 +355,32 @@ $(document).ready(() => {
     } catch (err) {
       notifyWarning(`Error deleting media: ${err}`);
     }
+  });
+
+  // add screen
+  $btnAddScreen.click(function () {
+    if (!$inputScreenId.val()) {
+      notifyDanger('Empty screen id is not acceptable');
+    }
+    if (!$inputScreenName.val()) {
+      notifyDanger('Empty screen name is not acceptable');
+    }
+    if (!$inputScreenCode1.val()) {
+      notifyDanger('Empty screen code is not acceptable');
+    }
+    if ($inputScreenCode1.val() !== $inputScreenCode2.val()) {
+      notifyDanger('Screen codes are not same');
+    }
+    addScreen({
+      screenId: $inputScreenId.val(),
+      screenName: $inputScreenName.val(),
+      screenCode: $inputScreenCode1.val()
+    });
+    // displayScreen();
+    $inputScreenId.val('');
+    $inputScreenName.val('');
+    $inputScreenCode1.val('');
+    $inputScreenCode2.val('');
+    $('#addScreenModal').modal('toggle');
   });
 });

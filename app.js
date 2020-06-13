@@ -43,6 +43,7 @@ const apiController = require('./controllers/api');
 const { isAuthorized } = require('./config/passport');
 const playlistApi = require('./controllers/playlist');
 const mediaApi = require('./controllers/media');
+const screenApi = require('./controllers/screen');
 
 /**
  * Create Express server.
@@ -161,6 +162,7 @@ app.get('/logout', userController.logout);
  */
 app.use('/api/playlist', playlistApi.router);
 app.use('/api/media', mediaApi);
+app.use('/api/screen', screenApi);
 // eslint-disable-next-line max-len
 // app.get('/api/facebook', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFacebook);
 // app.get('/api/upload', lusca({ csrf: true }), apiController.getFileUpload);

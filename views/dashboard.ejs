@@ -15,10 +15,6 @@
                         </button>
                     </div>
                 </div>
-                <!--                <ul class="list-group list-group-flush">-->
-                <!--                    <li class="list-group-item"><i class="fa fa-list-alt" aria-hidden="true"></i> Playlists</li>-->
-                <!--                    <li class="list-group-item"><i class="fa fa-desktop" aria-hidden="true"></i> Screens</li>-->
-                <!--                </ul>-->
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                     <a class="nav-link active" id="v-pills-playlist-tab" data-toggle="pill" href="#v-pills-playlist"
                        role="tab" aria-controls="v-pills-playlist" aria-selected="true">Playlists</a>
@@ -105,35 +101,7 @@
                                                 <th scope="col">Status</th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td>Screen 1</td>
-                                                <td><span class="font-italic">Playlist 1</span></td>
-                                                <td>
-                                                    <i class="fa fa-play ml-2" aria-hidden="true"></i>
-                                                    <i class="fa fa-pause ml-2" aria-hidden="true"></i>
-                                                    <i class="fa fa-stop ml-2" aria-hidden="true"></i>
-                                                </td>
-                                                <td>
-                                                    <i class="fa fa-trash-o ml-2"></i>
-                                                    <i class="fa fa-desktop ml-2"></i>
-                                                </td>
-                                                <td><span class="badge badge-info">Playing</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Screen 2</td>
-                                                <td><span class="font-italic">Playlist 2</span></td>
-                                                <td>
-                                                    <i class="fa fa-play ml-2" aria-hidden="true"></i>
-                                                    <i class="fa fa-pause ml-2" aria-hidden="true"></i>
-                                                    <i class="fa fa-stop ml-2" aria-hidden="true"></i>
-                                                </td>
-                                                <td>
-                                                    <i class="fa fa-trash-o ml-2"></i>
-                                                    <i class="fa fa-desktop ml-2"></i>
-                                                </td>
-                                                <td><span class="badge badge-info">Stopped</span></td>
-                                            </tr>
+                                            <tbody id="screenTable">
                                             </tbody>
                                         </table>
                                     </div>
@@ -170,7 +138,7 @@
         </div>
     </div>
 </div>
-<!--modal-add-playlist-->
+<!--modal-add-Screen-->
 <div class="modal" id="addScreenModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -179,14 +147,30 @@
                 <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
             </div>
             <div class="modal-body">
+                <footer class="blockquote-footer"> <cite title="Source Title">* Note:</cite> Remember these information about screen to login</footer>
+                <br>
                 <form>
-                    <div class="form-group"><input id="inputScreenName" type="text" class="form-control"
-                                                   placeholder="Enter Screen name"></div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <input name="screen_id" type="text" class="form-control" placeholder="Enter screen id">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input name="screen_name" type="text" class="form-control" placeholder="Enter screen name">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <input name="screen_code_1" type="password" class="form-control" placeholder="Enter screen code">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input name="screen_code_2" type="password" class="form-control" placeholder="Re-enter code">
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="btnAddPlaylist" class="btn btn-primary">Add Screen</button>
-                <button id="btnCloseAddPlaylistModal" type="button" class="btn btn-secondary" data-dismiss="modal">
+                <button type="button" id="btnAddScreen" class="btn btn-primary">Add Screen</button>
+                <button id="btnCloseAddScreenModal" type="button" class="btn btn-secondary" data-dismiss="modal">
                     Close
                 </button>
             </div>
