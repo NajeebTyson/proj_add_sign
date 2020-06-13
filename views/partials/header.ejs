@@ -22,8 +22,11 @@
                 <li class="nav-item"> <a class="nav-link" href="#">About</a> </li>
                 <li class="nav-item"> <a class="nav-link" href="#">FAQ</a> </li>
             </ul>
-            <a class="btn btn-outline-light navbar-btn ml-md-2" href="/logout">Log Out</a>
-            <a class="btn btn-outline-light navbar-btn ml-md-2" href="/admin-login">Log In</a>
+            <% if (user) { %>
+                <a class="btn btn-outline-light navbar-btn ml-md-2" href="/logout">Log Out</a>
+            <%} else { %>
+                <a class="btn btn-outline-light navbar-btn ml-md-2" href="/admin-login">Log In</a>
+            <% } %>
         </div>
     </div>
 </nav>
