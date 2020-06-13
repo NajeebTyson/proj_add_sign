@@ -6,7 +6,7 @@ const screenSchema = new mongoose.Schema({
   screen_code: String,
   playlist_id: String,
   status: String,
-  shuffle: String
+  shuffle: Boolean
 }, { timestamps: true, versionKey: false });
 
 module.exports = mongoose.model('Screen', screenSchema);

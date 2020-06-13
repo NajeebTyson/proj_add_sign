@@ -32,6 +32,8 @@ $(document).ready(() => {
   const $inputScreenCode1 = $('input[name ="screen_code_1"]');
   const $inputScreenCode2 = $('input[name ="screen_code_2"]');
   const $switchScreenShuffle = $('#switchScreenShuffle');
+  const $selectModalScreenPlaylistId = $('#selectModalScreenPlaylistId');
+  const $btnModalAttachPlaylist = $('#btnModalAttachPlaylist');
   // ================== End Variables ==========================
   // ================== FUNCTIONS ==============================
   // bytes to readable data unit
@@ -192,6 +194,26 @@ $(document).ready(() => {
       });
   }
 
+  // delete screen
+  function deleteScreen(query) {
+    const params = $.param({ ...query });
+    return $.ajax({
+      url: `/api/screen?${params}`,
+      type: 'DELETE'
+    });
+  }
+
+  // delete screen
+  // eslint-disable-next-line camelcase
+  function attachPlaylistToScreen(screen_id, playlist_id) {
+    return $.post('/api/screen/playlist', {
+      screen: {
+        screenId: screen_id,
+        playlistId: playlist_id
+      }
+    });
+  }
+
   // get screens
   function getScreens(query) {
     return new Promise(function (res, rej) {
@@ -210,19 +232,33 @@ $(document).ready(() => {
     const screens = getScreens();
     screens.then(function (data) {
       $screenTable.html('');
-      data.forEach(function (screen) {
+      data.forEach(async function (screen) {
+        let playlistName = '';
+        if (screen.playlist_id) {
+          try {
+            const playlist = await getPlaylist({ _id: screen.playlist_id });
+            if (playlist) {
+              playlistName = playlist[0].name;
+            }
+          } catch (e) {
+            playlistName = '';
+            notifyWarning(`Error getting playlist info, ${e}`);
+          }
+        }
         const screenHtml = `
-        <tr>
+        <tr data-screenid="${screen._id}" data-screenname="${screen.screen_name}">
             <td>${screen.screen_name}</td>
-            <td><span class="font-italic">${(!screen.playlist_id) ? '' : screen.playlist_id}</span></td>
+            <td><span class="font-italic">${playlistName}</span></td>
             <td>
                 <i class="fa fa-play ml-2 cursor-pointer" aria-hidden="true" title="Play"></i>
                 <i class="fa fa-pause ml-2 cursor-pointer" aria-hidden="true" title="Pause"></i>
                 <i class="fa fa-stop ml-2 cursor-pointer" aria-hidden="true" title="Stop"></i>
             </td>
             <td>
-                <i class="fa fa-trash-o ml-2 cursor-pointer" title="Delete screen"></i>
-                <i class="fa fa-bars ml-2 cursor-pointer" aria-hidden="true"title="Attach playlist"></i>
+                <i class="fa fa-random cursor-pointer btnScreenShuffle" title="Shuffle screen media" aria-hidden="true"></i>
+                <i class="fa fa-bars ml-2 cursor-pointer btnScreenAttachPlaylist" data-toggle="modal"
+                    data-target="#screenAttachPlaylistModal" aria-hidden="true" title="Attach playlist"></i>
+                <i class="fa fa-trash-o ml-2 cursor-pointer btnDeleteScreen" title="Delete screen"></i>
             </td>
             <td><span class="badge badge-info">${screen.status}</span></td>
         </tr>
@@ -382,12 +418,52 @@ $(document).ready(() => {
       screenCode: $inputScreenCode1.val(),
       screenShuffle: $switchScreenShuffle.is(':checked')
     });
-    displayScreen();
     $inputScreenId.val('');
     $inputScreenName.val('');
     $inputScreenCode1.val('');
     $inputScreenCode2.val('');
     $switchScreenShuffle.prop('checked', false);
     $('#addScreenModal').modal('toggle');
+    displayScreen();
+  });
+
+  // delete screen
+  $screenTable.on('click', '.btnDeleteScreen', async function () {
+    const screenId = $(this).parent().parent().data('screenid');
+    try {
+      await deleteScreen({ _id: screenId });
+      displayScreen();
+    } catch (err) {
+      notifyWarning(`Error deleting screen: ${err}`);
+    }
+  });
+
+  // attach screen id to attach playlist modal
+  $screenTable.on('click', '.btnScreenAttachPlaylist', function () {
+    const screenId = $(this).parent().parent().data('screenid');
+    const screenName = $(this).parent().parent().data('screenname');
+    $selectModalScreenPlaylistId.attr('data-screenid', screenId);
+    $('#modalHeaderSAP').html(`Attach playlist to screen: ${screenName}`);
+    getPlaylist().then((function (data) {
+      $selectModalScreenPlaylistId.html('');
+      data.forEach(function (playlist) {
+        $selectModalScreenPlaylistId.append(`<option value="${playlist._id}">${playlist.name}</option>`);
+      });
+    })).catch(function (err) {
+      notifyDanger(err);
+    });
+  });
+
+  // attach playlist to screen
+  $btnModalAttachPlaylist.click(function () {
+    const screenId = $selectModalScreenPlaylistId.attr('data-screenid');
+    const playlistId = $selectModalScreenPlaylistId.find(':selected').val();
+    attachPlaylistToScreen(screenId, playlistId).then(function () {
+      notifySuccess('Playlist is attached to the screen');
+    }).catch(function (err) {
+      notifyDanger(`Error in playlist attachment, ${err}`);
+    });
+    $('#screenAttachPlaylistModal').modal('toggle');
+    displayScreen();
   });
 });
