@@ -14,10 +14,10 @@
 #show-sidebar {
     position: fixed;
     left: 0;
-    top: 10px;
     border-radius: 0 4px 4px 0px;
     width: 35px;
     transition-delay: 0.3s;
+    z-index: 9999;
 }
 
 .page-wrapper.toggled #show-sidebar {
@@ -30,7 +30,6 @@
     height: 100%;
     max-height: 100%;
     position: fixed;
-    top: 0;
     left: -300px;
     z-index: 999;
 }
@@ -120,14 +119,18 @@
 }
 
 /*--------------------------page-content-----------------------------*/
+.tab-main-content {
+    width: 100%;
+}
+
+.dashboard-content {
+    padding: 30px 40px;
+}
+
 .page-wrapper .page-content {
     display: inline-block;
     width: 100%;
     padding-left: 0px;
-}
-
-.playlist-content {
-    padding: 30px 40px;
 }
 
 .page-wrapper .page-content {
@@ -152,6 +155,108 @@
     color: white;
 }
 
+.card-header a {
+    margin-left: 5px;
+}
+
 .media-list-item {
     margin: 2px;
+    width: 60px;
+    height: 90px;
+    max-height: 90px;
+    border: 1px solid #5a5a5a;
+    cursor: pointer;
+    overflow: hidden;
 }
+
+.media-list-item:first-child {
+    height: 100%;
+    width: 100%;
+}
+
+.media-list-item > i {
+    top: 40%;
+    position: absolute;
+    left: 40%;
+    right: 50%;
+    font-size: 30px;
+    color: #12bbad;
+}
+
+.file-upload {
+    position: relative;
+    background: linear-gradient(to right, lightblue 50%, transparent 50%);
+    background-size: 200% 100%;
+    background-position: right bottom;
+    transition:all 1s ease;
+}
+.file-upload.done {
+    background: lightgreen;
+}
+.file-upload a {
+    display: block;
+    position: relative;
+    padding: 5px;
+    color: black;
+}
+
+#mediaThumbnail {
+    max-height: 200px;
+    overflow: hidden;
+}
+
+/*=== Image Light Room ====*/
+.JesterBox div
+{
+    visibility: hidden;
+    position: fixed;
+    top: 5%; right: 5%; bottom: 5%; left: 5%;
+    z-index: 75;
+    text-align: center;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.JesterBox div:before
+{
+    content: '';
+    position: fixed;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: 74;
+
+    background-color: rgba(0, 0, 0, 0);
+    transition: all 0.5s ease-out;
+}
+
+.JesterBox div img
+{
+    position: relative;
+    z-index: 77;
+    max-width: 100%;
+    max-height: 100%;
+
+    margin-left: -9999px;
+    opacity: 0;
+    transition-property: all, opacity;
+    transition-duration: 0.5s, 0.2s;
+    transition-timing-function: ease-in-out, ease-out;
+}
+
+.JesterBox div:target { visibility: visible; }
+
+.JesterBox div:target:before { background-color: rgba(0, 0, 0, 0.7); }
+
+.JesterBox div:target img
+{
+    margin-left: 0px;
+    opacity: 1;
+}
+/*=== End Light Room ======*/
+
+/*=== General =============*/
+.cursor-pointer {
+    cursor: pointer;
+}
+/*=== End General =========*/
