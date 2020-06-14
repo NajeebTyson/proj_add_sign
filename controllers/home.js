@@ -7,3 +7,15 @@ exports.index = (req, res) => {
     title: 'Home'
   });
 };
+
+exports.dashboard = (req, res) => {
+  res.render('dashboard', {
+    title: 'Dashboard'
+  });
+};
+
+exports.dashboardScreens = (req, res) => {
+  res.render('dashboard_screen', {
+    title: 'Dashboard Screens'
+  });
+};

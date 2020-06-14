@@ -1,0 +1,262 @@
+
+/*----------------toggeled sidebar----------------*/
+.page-wrapper.toggled .sidebar-wrapper {
+    left: 0px;
+}
+
+@media screen and (min-width: 768px) {
+    .page-wrapper.toggled .page-content {
+        padding-left: 260px;
+    }
+}
+
+/*----------------show sidebar button----------------*/
+#show-sidebar {
+    position: fixed;
+    left: 0;
+    border-radius: 0 4px 4px 0px;
+    width: 35px;
+    transition-delay: 0.3s;
+    z-index: 9999;
+}
+
+.page-wrapper.toggled #show-sidebar {
+    left: -40px;
+}
+
+/*----------------sidebar-wrapper----------------*/
+.sidebar-wrapper {
+    width: 260px;
+    height: 100%;
+    max-height: 100%;
+    position: fixed;
+    left: -300px;
+    z-index: 999;
+}
+
+.sidebar-wrapper ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-wrapper a {
+    text-decoration: none;
+}
+
+/*----------------sidebar-content----------------*/
+.sidebar-content {
+    max-height: calc(100% - 30px);
+    height: calc(100% - 30px);
+    overflow-y: auto;
+    position: relative;
+}
+
+.sidebar-content.desktop {
+    overflow-y: hidden;
+}
+
+/*--------------------sidebar-brand----------------------*/
+.sidebar-wrapper .sidebar-brand {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-wrapper .sidebar-brand>a {
+    text-transform: uppercase;
+    font-weight: bold;
+    flex-grow: 1;
+}
+
+.sidebar-wrapper .sidebar-brand #close-sidebar {
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/*--------------------sidebar-header----------------------*/
+.sidebar-wrapper .sidebar-header {
+    padding: 20px;
+    overflow: hidden;
+}
+
+.sidebar-wrapper .sidebar-header .user-pic {
+    float: left;
+    width: 60px;
+    padding: 2px;
+    border-radius: 12px;
+    margin-right: 15px;
+    overflow: hidden;
+}
+
+.sidebar-wrapper .sidebar-header .user-pic img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.sidebar-wrapper .sidebar-header .user-info {
+    float: left;
+}
+
+.sidebar-wrapper .sidebar-header .user-info>span {
+    display: block;
+}
+
+.sidebar-wrapper .sidebar-header .user-info .user-role {
+    font-size: 12px;
+}
+
+.sidebar-wrapper .sidebar-header .user-info .user-status {
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.sidebar-wrapper .sidebar-header .user-info .user-status i {
+    font-size: 8px;
+    margin-right: 4px;
+    color: #5cb85c;
+}
+
+/*--------------------------page-content-----------------------------*/
+.tab-main-content {
+    width: 100%;
+}
+
+.dashboard-content {
+    padding: 30px 40px;
+}
+
+.page-wrapper .page-content {
+    display: inline-block;
+    width: 100%;
+    padding-left: 0px;
+}
+
+.page-wrapper .page-content {
+    overflow-x: hidden;
+}
+
+.right-sidebar {
+    z-index: 1000;
+    padding: 5px;
+    position: fixed;
+    right: 250px;
+    height: 100%;
+    margin-right: -250px;
+    margin-top: 0px;
+    overflow-y: auto;
+    background: #222;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    width: 350px;
+    color: white;
+}
+
+.card-header a {
+    margin-left: 5px;
+}
+
+.media-list-item {
+    margin: 2px;
+    width: 60px;
+    height: 90px;
+    max-height: 90px;
+    border: 1px solid #5a5a5a;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.media-list-item:first-child {
+    height: 100%;
+    width: 100%;
+}
+
+.media-list-item > i {
+    top: 40%;
+    position: absolute;
+    left: 40%;
+    right: 50%;
+    font-size: 30px;
+    color: #12bbad;
+}
+
+.file-upload {
+    position: relative;
+    background: linear-gradient(to right, lightblue 50%, transparent 50%);
+    background-size: 200% 100%;
+    background-position: right bottom;
+    transition:all 1s ease;
+}
+.file-upload.done {
+    background: lightgreen;
+}
+.file-upload a {
+    display: block;
+    position: relative;
+    padding: 5px;
+    color: black;
+}
+
+#mediaThumbnail {
+    max-height: 200px;
+    overflow: hidden;
+}
+
+/*=== Image Light Room ====*/
+.JesterBox div
+{
+    visibility: hidden;
+    position: fixed;
+    top: 5%; right: 5%; bottom: 5%; left: 5%;
+    z-index: 75;
+    text-align: center;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.JesterBox div:before
+{
+    content: '';
+    position: fixed;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: 74;
+
+    background-color: rgba(0, 0, 0, 0);
+    transition: all 0.5s ease-out;
+}
+
+.JesterBox div img
+{
+    position: relative;
+    z-index: 77;
+    max-width: 100%;
+    max-height: 100%;
+
+    margin-left: -9999px;
+    opacity: 0;
+    transition-property: all, opacity;
+    transition-duration: 0.5s, 0.2s;
+    transition-timing-function: ease-in-out, ease-out;
+}
+
+.JesterBox div:target { visibility: visible; }
+
+.JesterBox div:target:before { background-color: rgba(0, 0, 0, 0.7); }
+
+.JesterBox div:target img
+{
+    margin-left: 0px;
+    opacity: 1;
+}
+/*=== End Light Room ======*/
+
+/*=== General =============*/
+.cursor-pointer {
+    cursor: pointer;
+}
+/*=== End General =========*/

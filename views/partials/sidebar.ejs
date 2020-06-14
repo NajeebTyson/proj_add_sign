@@ -1,0 +1,57 @@
+<!-- views/partials/sidebar.ejs -->
+<!-- Main sidebar -->
+<div class="sidebar sidebar-main sidebar-expand-md border-right-5 border-white rounded-right"
+     style="background-color:#FFFFFF;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    background: #FFFFFF;
+    box-shadow: 2px 0px 4px rgba(144, 144, 144, 0.2);
+    ">
+    <!-- Sidebar content -->
+    <div class="sidebar-content">
+        <!-- Main navigation -->
+        <div class="card card-sidebar-mobile">
+            <ul class="nav nav-sidebar" data-nav-type="accordion">
+                <!-- Main -->
+                <li class="nav-item-header"><div class="text-uppercase font-size-m line-height-m"><i class="icon-menu" title="Main"></i></div></li>
+                <li class="nav-item">
+                    <a href="/" class="nav-link">
+                        <span style="color:#696969"><i class="icon-calculator2"></i> PoS </span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/sales" class="nav-link">
+                        <span style="color:#696969"><i class="icon-stats-growth"></i> Sales </span>
+                    </a>
+                </li>
+                <% if (user && user.type === 'admin' ) { %>
+                    <li class="nav-item">
+                        <a href="/item" class="nav-link">
+                            <span style="color:#696969"><i class="icon-stack3"></i> Items </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/user" class="nav-link">
+                            <span style="color:#696969"><i class="icon-users"></i> Users</span>
+                        </a>
+                    </li>
+                <% } %>
+                <li class="nav-item">
+                    <a href="/customer" class="nav-link">
+                        <span style="color:#696969"><i class="icon-user-tie"></i> Customers</span>
+                    </a>
+                </li>
+                <!-- /main -->
+
+            </ul>
+        </div>
+        <!-- /main navigation -->
+
+    </div>
+    <!-- /sidebar content -->
+
+</div>
+<!-- /main sidebar -->

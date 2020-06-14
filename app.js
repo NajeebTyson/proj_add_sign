@@ -6,17 +6,17 @@ const compression = require('compression');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const errorHandler = require('errorhandler');
-// const lusca = require('lusca');
 const dotenv = require('dotenv');
 const MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
 const flash = require('express-flash');
 const path = require('path');
+const util = require('util');
 const passport = require('passport');
 const sass = require('node-sass-middleware');
-// const multer = require('multer');
+const multer = require('multer');
 
-// const upload = multer({ dest: path.join(__dirname, 'uploads') });
+const upload = multer({ dest: path.join(__dirname, 'uploads') });
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -33,14 +33,17 @@ const { HttpCodes } = require('./controllers/utils/error');
  * Controllers (route handlers).
  */
 const homeController = require('./controllers/home');
-// const userController = require('./controllers/user');
-// const apiController = require('./controllers/api');
+const userController = require('./controllers/user');
+const apiController = require('./controllers/api');
 // const contactController = require('./controllers/contact');
 
 /**
  * API keys and Passport configuration.
  */
-// const passportConfig = require('./config/passport');
+const { isAuthorized } = require('./config/passport');
+const playlistApi = require('./controllers/playlist');
+const mediaApi = require('./controllers/media');
+const screenApi = require('./controllers/screen');
 
 /**
  * Create Express server.
@@ -88,17 +91,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-app.use((req, res, next) => {
-  if (req.path === '/api/upload') {
-    // Multer multipart/form-data handling needs to occur before the Lusca CSRF check.
-    next();
-  }
-  // else {
-  //   lusca.csrf()(req, res, next);
-  // }
-});
-// app.use(lusca.xframe('SAMEORIGIN'));
-// app.use(lusca.xssProtection(true));
 app.disable('x-powered-by');
 app.use((req, res, next) => {
   res.locals.user = req.user;
@@ -118,20 +110,35 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use('/', express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
-app.use('/js/lib', express.static(path.join(__dirname, 'node_modules/chart.js/dist'), { maxAge: 31557600000 }));
-app.use('/js/lib', express.static(path.join(__dirname, 'node_modules/popper.js/dist/umd'), { maxAge: 31557600000 }));
-app.use('/js/lib', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js'), { maxAge: 31557600000 }));
-app.use('/js/lib', express.static(path.join(__dirname, 'node_modules/jquery/dist'), { maxAge: 31557600000 }));
-app.use('/webfonts', express.static(path.join(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts'), { maxAge: 31557600000 }));
+app.use('/static/', express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+app.use('/static/js/lib', express.static(path.join(__dirname, 'node_modules/chart.js/dist'), { maxAge: 31557600000 }));
+app.use('/static/js/lib', express.static(path.join(__dirname, 'node_modules/popper.js/dist/umd'), { maxAge: 31557600000 }));
+app.use('/static/bootstrap/', express.static(path.join(__dirname, 'node_modules/bootstrap'), { maxAge: 31557600000 }));
+app.use('/static/jquery/', express.static(path.join(__dirname, 'node_modules/jquery'), { maxAge: 31557600000 }));
+app.use('/static/webfonts', express.static(path.join(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts'), { maxAge: 31557600000 }));
+app.use('/static/bootstrap-notify/', express.static(path.join(__dirname, 'node_modules/bootstrap-notify'), { maxAge: 31557600000 }));
+app.use('/static/blueimp-file-upload/', express.static(path.join(__dirname, 'node_modules/blueimp-file-upload'), { maxAge: 31557600000 }));
+app.use('/static/media/', express.static(path.join(__dirname, 'uploads'), { maxAge: 31557600000 }));
+
+
+app.use((req, res, next) => {
+  logger.info(`--Request ${req.connection.remoteAddress} ${req.method} ${req.originalUrl} args: ${util.inspect(req.query)}`);
+  next();
+});
 
 /**
  * Primary app routes.
  */
 app.get('/', homeController.index);
+app.get('/dashboard', homeController.dashboard);
+app.get('/screens', homeController.dashboardScreens);
+app.get('/admin-signup', userController.getAdminSignup);
+app.post('/admin-signup', userController.postAdminSignup);
+app.get('/admin-login', userController.getAdminLogin);
+app.post('/admin-login', userController.postAdminLogin);
+app.get('/logout', userController.logout);
 // app.get('/login', userController.getLogin);
 // app.post('/login', userController.postLogin);
-// app.get('/logout', userController.logout);
 // app.get('/forgot', userController.getForgot);
 // app.post('/forgot', userController.postForgot);
 // app.get('/reset/:token', userController.getReset);
@@ -153,12 +160,14 @@ app.get('/', homeController.index);
 /**
  * API examples routes.
  */
-// app.get('/api', apiController.getApi);
+app.use('/api/playlist', playlistApi.router);
+app.use('/api/media', mediaApi);
+app.use('/api/screen', screenApi.router);
 // eslint-disable-next-line max-len
 // app.get('/api/facebook', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFacebook);
 // app.get('/api/upload', lusca({ csrf: true }), apiController.getFileUpload);
 // eslint-disable-next-line max-len
-// app.post('/api/upload', upload.single('myFile'), lusca({ csrf: true }), apiController.postFileUpload);
+app.post('/api/upload', upload.array('mediaFiles[]'), apiController.postFileUpload);
 
 /**
  * Error Handler.
