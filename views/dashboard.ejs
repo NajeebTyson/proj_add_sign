@@ -1,0 +1,240 @@
+<%- include ('partials/layout_header') %>
+
+<div class="page-content">
+    <div class="page-wrapper chiller-theme toggled">
+        <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+            <i class="fa fa-bars" aria-hidden="true"></i>
+        </a>
+        <nav id="sidebar" class="sidebar-wrapper">
+            <div class="sidebar-content">
+                <div class="sidebar-brand">
+                    <a href="#">dashboard</a>
+                    <div id="close-sidebar">
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active" id="v-pills-playlist-tab" data-toggle="pill" href="#v-pills-playlist"
+                       role="tab" aria-controls="v-pills-playlist" aria-selected="true">Playlists</a>
+                    <a class="nav-link" id="v-pills-screen-tab" data-toggle="pill" href="#v-pills-screen" role="tab"
+                       aria-controls="v-pills-screen" aria-selected="false">Screens</a>
+                </div>
+            </div>
+            <!-- sidebar-content  -->
+        </nav>
+        <!-- sidebar-wrapper  -->
+        <main class="page-content">
+            <div class="row playlist-content">
+                <div class="tab-content tab-main-content" id="v-pills-tabContent">
+                    <div class="tab-pane fade show active" id="v-pills-playlist" role="tabpanel"
+                         aria-labelledby="v-pills-playlist-tab">
+                        <div class="row">
+                            <div class="col-md-8 dashboard-content">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h2>Your Playlists</h2>
+                                            </div>
+                                            <div class="col-md-8"><a class="btn btn-primary float-right" href="#"
+                                                                     data-toggle="modal"
+                                                                     data-target="#addPlaylistModal"><i
+                                                            class="fa fa-plus" aria-hidden="true"></i> &nbsp;Add
+                                                    Playlist </a></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="accordion" id="accordionPlaylist">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div id="rightSideBar" class="right-sidebar d-none">
+                                    <div class="row">
+                                        <div class="col-md-6"><h4>Media</h4></div>
+                                        <div class="col-md-6" id="mediaDeleteLocation">
+                                        </div>
+                                    </div>
+                                    <div class="row" id="mediaThumbnail">
+                                    </div>
+                                    <div class="row">
+                                        <div class="p-4 col-md-12">
+                                            <h4 class="mb-4" contenteditable="true">Media Information</h4>
+                                            <ul class="list-unstyled" id="mediaInformation">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-screen" role="tabpanel" aria-labelledby="v-pills-screen-tab">
+                        <div class="row">
+                            <div class="col-md-8 dashboard-content">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h2>Your Screens</h2>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <a class="btn btn-primary float-right" href="#"
+                                                                     data-toggle="modal"
+                                                                     data-target="#addScreenModal"><i
+                                                            class="fa fa-plus" aria-hidden="true"></i>
+                                                    &nbsp;Add Screen
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <table class="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">Screen</th>
+                                                <th scope="col">Playlist</th>
+                                                <th scope="col">Controls</th>
+                                                <th scope="col">Actions</th>
+                                                <th scope="col">Status</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="screenTable">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+<!--modal-add-playlist-->
+<div class="modal" id="addPlaylistModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Playlist</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group"><input id="inputPlaylistName" type="text" class="form-control"
+                                                   placeholder="Enter playlist name"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnAddPlaylist" class="btn btn-primary">Add</button>
+                <button id="btnCloseAddPlaylistModal" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--modal-add-Screen-->
+<div class="modal" id="addScreenModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Screen</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+            </div>
+            <div class="modal-body">
+                <footer class="blockquote-footer"> <cite title="Source Title">* Note:</cite> Remember these information about screen to login</footer>
+                <br>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <input name="screen_id" type="text" class="form-control" placeholder="Enter screen id">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input name="screen_name" type="text" class="form-control" placeholder="Enter screen name">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <input name="screen_code_1" type="password" class="form-control" placeholder="Enter screen code">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input name="screen_code_2" type="password" class="form-control" placeholder="Re-enter code">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="switchScreenShuffle">
+                            <label class="custom-control-label" for="switchScreenShuffle">Shuffle playlist</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnAddScreen" class="btn btn-primary">Add Screen</button>
+                <button id="btnCloseAddScreenModal" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--modal-screen-attach-playlist-->
+<div class="modal" id="screenAttachPlaylistModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalHeaderSAP">Attach playlist to screen</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="selectModalScreenPlaylistId">Select Playlist</label>
+                        <select class="form-control" id="selectModalScreenPlaylistId">
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnModalAttachPlaylist" class="btn btn-primary">Attach</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--modal-add-media-->
+<div class="modal" id="addMediaModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="titleMediaAddModal" class="modal-title">Add Media</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+            </div>
+            <div class="modal-body">
+                <form id="formMediaUpload" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input id="inputHiddenPlaylist" type="hidden" name="playlist" value="">
+                        <input id="inputMediaFile" type="file" name="mediaFiles[]" data-url="/api/upload"
+                               class="form-control" placeholder="Select media file" multiple>
+                    </div>
+                </form>
+                <div id="uploadedFiles">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCloseAddMediaModal" type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include ('partials/layout_footer') %>
