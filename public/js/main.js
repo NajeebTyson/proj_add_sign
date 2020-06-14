@@ -312,7 +312,6 @@ $(document).ready(() => {
   // ================== FUNCTIONS END ==========================
 
   // ================== MAIN ===================================
-  hideMediaInfoSidebar();
 
   // accordian for playlist
   $('.sidebar-dropdown > a').click(function () {
