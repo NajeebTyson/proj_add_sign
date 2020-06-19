@@ -528,5 +528,5 @@ $(document).ready(() => {
     }).catch(function () {
       notifyDanger('Error updating screen shuffle');
     });
-  })
+  });
 });
