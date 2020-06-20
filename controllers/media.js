@@ -49,7 +49,6 @@ router.route('/')
         // remove it from all the playlists
         const idsMedia = _.map(findData, (doc) => doc._id);
         removeMediasFromPlaylists(idsMedia).then((rres) => {
-          console.log('res: ', rres);
           res.json({
             status: true,
             data: deleteData

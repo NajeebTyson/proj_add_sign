@@ -175,7 +175,6 @@ router.route('/login').post((req, res, next) => {
     if (!doc) {
       return next(new NotFoundError('Invalid screen id or code'));
     }
-    console.log(doc);
     res.json({
       status: true,
       data: doc

@@ -77,8 +77,6 @@ exports.postFileUpload = (req, res, next) => {
     for (const doc of value) {
       ids.push(doc._id.toString());
     }
-    console.log('playlist:', strToObjectId(playlistId));
-    console.log('ids: ', ids);
     Playlist.updateOne({ _id: strToObjectId(playlistId) }, { '$addToSet': { 'media': { '$each': ids } } }, (err) => {
       if (err) {
         logger.error(`postFileUpload - Error: ${err}`);
