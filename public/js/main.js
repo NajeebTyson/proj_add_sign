@@ -31,6 +31,7 @@ $(document).ready(() => {
   const $inputScreenName = $('input[name ="screen_name"]');
   const $inputScreenCode1 = $('input[name ="screen_code_1"]');
   const $inputScreenCode2 = $('input[name ="screen_code_2"]');
+  const $selectImageTimeDuration = $('#selectImageTimeDuration');
   const $switchScreenShuffle = $('#switchScreenShuffle');
   const $selectModalScreenPlaylistId = $('#selectModalScreenPlaylistId');
   const $btnModalAttachPlaylist = $('#btnModalAttachPlaylist');
@@ -455,7 +456,8 @@ $(document).ready(() => {
       screenId: $inputScreenId.val(),
       screenName: $inputScreenName.val(),
       screenCode: $inputScreenCode1.val(),
-      screenShuffle: $switchScreenShuffle.is(':checked')
+      screenShuffle: $switchScreenShuffle.is(':checked'),
+      imageDuration: Number($selectImageTimeDuration.find(':selected').val())
     });
     $inputScreenId.val('');
     $inputScreenName.val('');

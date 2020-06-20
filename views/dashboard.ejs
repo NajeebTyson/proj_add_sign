@@ -166,10 +166,24 @@
                             <input name="screen_code_2" type="password" class="form-control" placeholder="Re-enter code">
                         </div>
                     </div>
+                    <div class="form-row d-inline">
+                        <label for="selectImageTimeDuration">Image time duration</label>
+                        <select class="form-control" id="selectImageTimeDuration">
+                            <option value="5" selected>5 second</option>
+                            <option value="10">10 second</option>
+                            <option value="15">15 second</option>
+                            <option value="20">20 second</option>
+                            <option value="30">30 second</option>
+                            <option value="60">1 minute</option>
+                            <option value="300">5 minute</option>
+                        </select>
+                    </div>
                     <div class="form-row">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="switchScreenShuffle">
-                            <label class="custom-control-label" for="switchScreenShuffle">Shuffle playlist</label>
+                        <div class="form-group col-md-6">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="switchScreenShuffle">
+                                <label class="custom-control-label" for="switchScreenShuffle">Shuffle playlist</label>
+                            </div>
                         </div>
                     </div>
                 </form>
