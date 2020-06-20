@@ -144,7 +144,7 @@ $(document).ready(() => {
             htm += ` <img class="img-fluid d-block align-middle" src="/static/media/${mediaItem.saved_name}">`;
             // NOTE: paste here mistakenly, so its missing from somewhere, not sure
             // eslint-disable-next-line max-len
-            // htm += `<a href="#" class="JesterBox"><div id="${mediaItem._id}"><img src="/static/media/${mediaItem.saved_name}"></div>`;
+            htm += `<a href="#" class="JesterBox lightroom-img"><div id="${mediaItem._id}"><img src="/static/media/${mediaItem.saved_name}"></div></a>`;
           } else if (mediaItem.type === 'video') {
             htm += `<div class="embed-responsive embed-responsive-16by9" ><video src="/static/media/${mediaItem.saved_name}" class="embed-responsive-item"> Your browser does not support HTML5 video. </video></div>`;
             htm += '<i class="fa fa-play" aria-hidden="true"></i>';
