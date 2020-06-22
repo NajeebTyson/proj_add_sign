@@ -31,6 +31,7 @@ $(document).ready(() => {
   const $inputScreenName = $('input[name ="screen_name"]');
   const $inputScreenCode1 = $('input[name ="screen_code_1"]');
   const $inputScreenCode2 = $('input[name ="screen_code_2"]');
+  const $selectImageTimeDuration = $('#selectImageTimeDuration');
   const $switchScreenShuffle = $('#switchScreenShuffle');
   const $selectModalScreenPlaylistId = $('#selectModalScreenPlaylistId');
   const $btnModalAttachPlaylist = $('#btnModalAttachPlaylist');
@@ -140,8 +141,10 @@ $(document).ready(() => {
         mediaData.data.forEach(function (mediaItem) {
           let htm = `<div class="col-6 col-md-4 col-lg-2 p-0 media-list-item" data-mediaid=${mediaItem._id}>`;
           if (mediaItem.type === 'image') {
-            htm += ` <img class="img-fluid d-block" src="/static/media/${mediaItem.saved_name}">`;
-            htm += `<a href="#" class="JesterBox"><div id="${mediaItem._id}"><img src="/static/media/${mediaItem.saved_name}"></div>`;
+            htm += ` <img class="img-fluid d-block align-middle" src="/static/media/${mediaItem.saved_name}">`;
+            // NOTE: paste here mistakenly, so its missing from somewhere, not sure
+            // eslint-disable-next-line max-len
+            htm += `<a href="#" class="JesterBox lightroom-img"><div id="${mediaItem._id}"><img src="/static/media/${mediaItem.saved_name}"></div></a>`;
           } else if (mediaItem.type === 'video') {
             htm += `<div class="embed-responsive embed-responsive-16by9" ><video src="/static/media/${mediaItem.saved_name}" class="embed-responsive-item"> Your browser does not support HTML5 video. </video></div>`;
             htm += '<i class="fa fa-play" aria-hidden="true"></i>';
@@ -455,7 +458,8 @@ $(document).ready(() => {
       screenId: $inputScreenId.val(),
       screenName: $inputScreenName.val(),
       screenCode: $inputScreenCode1.val(),
-      screenShuffle: $switchScreenShuffle.is(':checked')
+      screenShuffle: $switchScreenShuffle.is(':checked'),
+      imageDuration: Number($selectImageTimeDuration.find(':selected').val())
     });
     $inputScreenId.val('');
     $inputScreenName.val('');
@@ -528,5 +532,5 @@ $(document).ready(() => {
     }).catch(function () {
       notifyDanger('Error updating screen shuffle');
     });
-  })
+  });
 });

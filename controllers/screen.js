@@ -2,7 +2,7 @@ const router = require('express').Router();
 const validator = require('validator');
 
 const Screen = require('../models/Screen');
-const { BadRequestError, ForbiddenError } = require('./utils/error');
+const { BadRequestError, ForbiddenError, NotFoundError } = require('./utils/error');
 const { isTrue } = require('./utils/utils');
 
 const SCREEN_STATUS = {
@@ -48,7 +48,8 @@ router.route('/')
       screen_code: req.body.screen.screenCode,
       playlist_id: null,
       status: SCREEN_STATUS.STOPPED,
-      shuffle: isTrue(req.body.screen.screenShuffle)
+      shuffle: isTrue(req.body.screen.screenShuffle),
+      image_duration: req.body.screen.imageDuration
     });
     Screen.findOne({ screen_id: screenId }, (err, existingScreen) => {
       if (err) {
@@ -156,6 +157,32 @@ router.put('/shuffle', (req, res, next) => {
   });
 });
 
+router.route('/login').post((req, res, next) => {
+  if (req.body.screen === undefined) {
+    return next(new BadRequestError('Invalid request'));
+  }
+  if (validator.isEmpty(req.body.screen.screenId)) {
+    return next(new BadRequestError('Screen id is not valid'));
+  }
+  if (validator.isEmpty(req.body.screen.screenCode)) {
+    return next(new BadRequestError('Screen code is not valid'));
+  }
+  // eslint-disable-next-line max-len
+  Screen.findOne({ screen_id: req.body.screen.screenId, screen_code: req.body.screen.screenCode }, (err, doc) => {
+    if (err) {
+      return next(err);
+    }
+    if (!doc) {
+      return next(new NotFoundError('Invalid screen id or code'));
+    }
+    res.json({
+      status: true,
+      data: doc
+    });
+  });
+});
+
+// eslint-disable-next-line max-len
 const deletePlaylistsFromScreens = async (playlistIds) => Screen.updateMany({ playlist_id: { $in : playlistIds } }, { $set: { playlist_id: null } });
 
 module.exports.router = router;

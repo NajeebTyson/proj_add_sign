@@ -8,7 +8,6 @@ const { BadRequestError } = require('./utils/error');
 
 async function removeMediasFromPlaylists(mediaIds) {
   const ids = await _.map(mediaIds, (id) => id.toString());
-  console.log('delete form play', ids);
   return Playlist.updateMany({}, { $pull: { media: { $in: ids } } });
 }
 
