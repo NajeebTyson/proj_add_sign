@@ -3,9 +3,13 @@
  * Home page.
  */
 exports.index = (req, res) => {
-  res.render('home', {
-    title: 'Home'
-  });
+  // res.render('home', {
+  //   //   title: 'Home'
+  //   // });
+  res.redirect('admin-login');
+  // res.render('account/admin_login', {
+  //   title: 'Login'
+  // });
 };
 
 exports.dashboard = (req, res) => {

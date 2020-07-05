@@ -1,3 +1,41 @@
+body {
+    background-color: #2b3648;
+}
+
+nav.navbar {
+    background-color: #212936 !important;
+}
+
+.login-box {
+    background-color: #212936 !important;
+}
+
+.color-figma-text {
+    color: #AFBDD1;
+}
+
+.btn-color-figma {
+    background-color: #212936;
+    border-color: #212936;
+}
+
+.login-input {
+    background-color: #2B3648;
+    border-color: #2B3648;
+}
+
+.login-text-below {
+    color: #AFBDD1;
+}
+
+.login-text-below a {
+    color: #009E78;
+}
+
+.login-btn {
+    background-color: #009E78;
+    border-color: #009E78;
+}
 
 /*----------------toggeled sidebar----------------*/
 .page-wrapper.toggled .sidebar-wrapper {
@@ -50,6 +88,12 @@
     height: calc(100% - 30px);
     overflow-y: auto;
     position: relative;
+    background-color: #212936;
+}
+
+.side-pill.active {
+    background-color: #2B3648 !important;
+    border-radius: 0;
 }
 
 .sidebar-content.desktop {
@@ -183,7 +227,7 @@
     left: 40%;
     right: 50%;
     font-size: 30px;
-    color: #12bbad;
+    color: #2e1f4d;
 }
 
 .file-upload {
@@ -264,5 +308,9 @@
 /*=== General =============*/
 .cursor-pointer {
     cursor: pointer;
+}
+
+.card {
+    background-color: #212936 !important;
 }
 /*=== End General =========*/
