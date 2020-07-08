@@ -105,3 +105,10 @@ dist
 
 .idea
 uploads/*
+
+# tizen app related files
+.project
+.settings
+.sign
+.tproject
+*.wgt
