@@ -37,6 +37,13 @@ $(document).ready(() => {
   const $btnModalAttachPlaylist = $('#btnModalAttachPlaylist');
   // ================== End Variables ==========================
   // ================== FUNCTIONS ==============================
+  // sleep function
+  function sleep(ms) {
+    return new Promise(function (resolve) {
+      return setTimeout(resolve, ms);
+    });
+  }
+
   // bytes to readable data unit
   function bytesToStr(bytes_) {
     let res = '';
@@ -166,14 +173,17 @@ $(document).ready(() => {
   function displayPlaylist() {
     const playlist = getPlaylist();
     playlist.then(function (data) {
-      const $listPlaylist = $('#accordionPlaylist');
-      $listPlaylist.html('');
+      $playlistAccordion.html('');
       data.forEach(async function (playlist) {
-        $listPlaylist.append(await getPlaylistCard(playlist));
+        $playlistAccordion.append(await getPlaylistCard(playlist));
       });
     }).catch(function (err) {
       notifyDanger(err.responseJSON.error);
     });
+  }
+
+  function clearPlaylistHtml() {
+    $playlistAccordion.html('');
   }
 
   // clean media info sidebar
@@ -341,14 +351,14 @@ $(document).ready(() => {
   });
 
   // add playlist
-  $('#btnAddPlaylist').click(function () {
+  $('#btnAddPlaylist').click(async function () {
     const $playlistInput = $('#inputPlaylistName');
     const playlistName = $playlistInput.val();
     if (playlistName === '') {
       notifyDanger('Invalid playlist name');
       return;
     }
-    addPlaylist(playlistName);
+    await addPlaylist(playlistName);
     displayPlaylist();
     $playlistInput.val('');
     $('#addPlaylistModal').modal('toggle');
@@ -359,9 +369,9 @@ $(document).ready(() => {
   displayScreen();
 
   // delete playlist
-  $playlistAccordion.on('click', '.deletePlaylist', function () {
+  $playlistAccordion.on('click', '.deletePlaylist', async function () {
     const playlistId = $(this).data('playlistid');
-    deletePlaylist({ _id: playlistId });
+    await deletePlaylist({ _id: playlistId });
     displayPlaylist();
   });
 
@@ -390,10 +400,9 @@ $(document).ready(() => {
       data.context.css('background-position-x', `${100 - progress}%`);
     },
     done(e, data) {
-      data.context
-        .addClass('done');
-      // .find('a')
-      // .prop('href', data.result.files[0].url);
+      data.context.addClass('done');
+    },
+    stop(e, data) {
       displayPlaylist();
     }
   });
@@ -442,7 +451,7 @@ $(document).ready(() => {
   });
 
   // add screen
-  $btnAddScreen.click(function () {
+  $btnAddScreen.click(async function () {
     if (!$inputScreenId.val()) {
       notifyDanger('Empty screen id is not acceptable');
       return;
@@ -459,7 +468,7 @@ $(document).ready(() => {
       notifyDanger('Screen codes are not same');
       return;
     }
-    addScreen({
+    await addScreen({
       screenId: $inputScreenId.val(),
       screenName: $inputScreenName.val(),
       screenCode: $inputScreenCode1.val(),
@@ -538,4 +547,18 @@ $(document).ready(() => {
       notifyDanger('Error updating screen shuffle');
     });
   });
+
+  async function updateDashboard() {
+    while (window.location.pathname === '/dashboard') {
+      // displayPlaylist();
+      displayScreen();
+      // eslint-disable-next-line no-await-in-loop
+      await sleep(10000);
+    }
+  }
+
+  if (window.location.pathname === '/dashboard') {
+    updateDashboard();
+  }
+
 });
