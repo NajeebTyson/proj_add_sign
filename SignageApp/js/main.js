@@ -25,9 +25,9 @@ $(document).ready(function() {
 	const $screenPage = $("#screenPage");
 	const $monitorContent = $("#monitorContent");
 	const $fullScreenPage = $("#fullScreenPage");
-	
-	
-	
+
+
+
 //==================== FUNCTIONS ==========================
 	async function doLogin(screenId, screenCode) {
 		try {
@@ -75,7 +75,7 @@ $(document).ready(function() {
 		}
 		var arr1 = _arr1.concat().sort();
 		var arr2 = _arr2.concat().sort();
-	
+
 		for (var i = 0; i < arr1.length; i++) {
 			if (arr1[i] !== arr2[i])
 				return false;
@@ -160,6 +160,16 @@ $(document).ready(function() {
 	function clearMonitorContent() {
 		$monitorContent.html('');
 	}
+
+	// display scren stop
+	function displayStoppedScreen() {
+		const stopHtml = '<div class="stopScreen d-flex justify-content-center align-middle"><span>STOPPED</span></div>';
+		if (FULLSCREEN_VIEW) {
+			$fullScreenPage.html(stopHtml);
+		} else {
+			$monitorContent.html(stopHtml);
+		}
+	}
 //==================== END FUNCTIONS ======================
 
 //==================== MIAN ===============================
@@ -172,7 +182,7 @@ $(document).ready(function() {
 			startPlayLoop();
 		}
 	});
-	
+
 	// singing out
 	$btnSignout.click(function() {
 		$screenPage.addClass("d-none");
@@ -226,7 +236,7 @@ $(document).ready(function() {
 				let videoIsplaying = true;
 				document.addEventListener('ended', function(e){
 					console.log('ended event occurred')
-					videoIsplaying = false;	
+					videoIsplaying = false;
 				}, true);
 				while (videoIsplaying) {
 					let vidHtml;
@@ -262,8 +272,7 @@ $(document).ready(function() {
 				if (!SCREEN_ID) {
 					break;
 				}
-				const screenData = await getScreenByQuery({screen_id: SCREEN_ID});
-
+				const screenData = await getScreenByQuery({screen_id: SCREEN_ID, app: 'client'});
 				if (screenData.data.length === 0) {
 					console.log('No screen with this id: ', SCREEN_ID);
 					return;
@@ -273,7 +282,7 @@ $(document).ready(function() {
 				const screenStatus = SCREEN_OBJ.status;
 				if(screenStatus === "stopped" || screenStatus === "paused") {
 					if(screenStatus === "stopped") {
-						clearMonitorContent();
+						displayStoppedScreen();
 					}
 					await sleep(10000);
 					continue;
@@ -291,7 +300,7 @@ $(document).ready(function() {
 				}
 				const playlistDoc = playlistData.data[0];
 				PLAYLIST_OBJ = playlistDoc;
-				
+
 				const res = await playMedia(playlistDoc);
 			} catch(err) {
 				console.log('Error: ', err);
@@ -329,7 +338,7 @@ $(document).ready(function() {
 			}
         }
     }
-    
+
     // add eventListener for tizenhwkey (Back Button)
 	document.addEventListener('tizenhwkey', backEvent);
 	$(document).on('keydown', function(event) {

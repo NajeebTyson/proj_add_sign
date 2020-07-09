@@ -2,45 +2,45 @@
 body {
     background-color: #222;
   }
-  
+
   #container {
     max-width: 1024px;
     margin: auto;
   }
-  
+
   #monitor {
-      background: #000; 
+      background: #000;
       position: relative;
-      border-top: 3px solid #888; 
+      border-top: 3px solid #888;
       margin: 5%;
-      padding: 2% 2% 4% 2%; 
-      border-radius: 10px; 
-      border-bottom-left-radius: 50% 2%; 
-      border-bottom-right-radius: 50% 2%; 
+      padding: 2% 2% 4% 2%;
+      border-radius: 10px;
+      border-bottom-left-radius: 50% 2%;
+      border-bottom-right-radius: 50% 2%;
       transition: margin-right 1s;
       box-shadow: 0 0 100px 0 rgba(200, 235, 255, 0.4);
   }
-  
+
   #monitor:after {
       content: '';
       display: block;
       position: absolute;
       bottom: 3%;
       left: 36%;
-      height: .5%; 
+      height: .5%;
       width: 28%;
-      background: #ddd; 
-      border-radius: 50%; 
-      box-shadow: 0 0 3px 0 white; 
+      background: #ddd;
+      border-radius: 50%;
+      box-shadow: 0 0 3px 0 white;
   }
-  
+
   #monitorscreen {
       position: relative;
     background-color: #777;
-      background-size: cover; 
+      background-size: cover;
       background-position: top center;
-      height: 0; 
-      padding-bottom: 56.25%; 
+      height: 0;
+      padding-bottom: 56.25%;
       position: relative;
       overflow: hidden;
   }
@@ -73,7 +73,7 @@ body {
     list-style:none;
     margin: 0 5px;
   }
-  
+
   ul li a {
     position: relative;
     display: block;
@@ -87,7 +87,7 @@ body {
     transition: .5s;
     padding-top: 5px;
   }
-  
+
   ul li a:before {
     content: '';
     position: absolute;
@@ -101,13 +101,13 @@ body {
     transform: scale(.9);
     z-index: -1;
   }
-  
+
   ul li a:hover:before {
     transform: scale(1.2);
     box-shadow: 0 0 15px #d35400;
     filter: blur(3px);
   }
-  
+
   ul li a:hover {
     color: #ffa502;
     box-shadow: 0 0 15px #d35400;
@@ -125,20 +125,20 @@ body {
   }
 
   /* login */
-  
+
   .card-signin {
     margin-top: 120px !important;
     border: 0;
     border-radius: 1rem;
     box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
   }
-  
+
   .card-signin .card-title {
     margin-bottom: 2rem;
     font-weight: 300;
     font-size: 1.5rem;
   }
-  
+
   .card-signin .card-body {
     padding: 2rem;
   }
@@ -146,11 +146,11 @@ body {
   .card-title {
     color: #222;
   }
-  
+
   .form-signin {
     width: 100%;
   }
-  
+
   .form-signin .btn {
     font-size: 80%;
     border-radius: 5rem;
@@ -163,7 +163,7 @@ body {
   #btnLogin {
     background-color: #222;
   }
-  
+
   #fullScreenPage {
     align-items: center;
   }
@@ -175,4 +175,10 @@ body {
   #fullScreenPage video {
     width: 100%;
   }
-  
+
+.stopScreen {
+  color: #595858;
+  font-size: 150px;
+  font-weight: bold;
+  margin-top: 150px;
+}
