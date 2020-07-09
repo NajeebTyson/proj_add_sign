@@ -41,7 +41,7 @@ const apiController = require('./controllers/api');
 /**
  * API keys and Passport configuration.
  */
-const { isAuthorized } = require('./config/passport');
+require('./config/passport');
 const playlistApi = require('./controllers/playlist');
 const mediaApi = require('./controllers/media');
 const screenApi = require('./controllers/screen');

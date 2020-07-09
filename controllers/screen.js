@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const validator = require('validator');
 
+const agenda = require('../config/worker');
 const Screen = require('../models/Screen');
+const logger = require('../config/logger');
 const { BadRequestError, ForbiddenError, NotFoundError } = require('./utils/error');
 const { isTrue } = require('./utils/utils');
 
@@ -11,15 +13,43 @@ const SCREEN_STATUS = {
   STOPPED: 'stopped'
 };
 
+// eslint-disable-next-line max-len
+const updateScreenActiveStatus = (screenId, activeStatus) => Screen.updateOne({ screen_id: screenId }, { active: activeStatus });
+
+const scheduleScreenJob = (jobName, screenId) => {
+  agenda.define(jobName, async (job) => {
+    await updateScreenActiveStatus(job.attrs.data.screen_id, false);
+    logger.info(`Screen [${job.attrs.data.screen_id}] is offline now.`);
+    job.remove();
+  });
+  agenda.schedule('one minute', jobName, { screen_id: screenId });
+  logger.info(`Screen [${screenId}] is active now.`);
+};
+
+const scheduleScreenStatus = async (screenId) => {
+  const jobName = `screen_${screenId}`;
+  const jobs = await agenda.jobs({ name: jobName });
+  if (jobs.length > 0) {
+    await agenda.cancel({ name: jobName });
+    scheduleScreenJob(jobName, screenId);
+  } else {
+    await updateScreenActiveStatus(screenId, true);
+    scheduleScreenJob(jobName, screenId);
+  }
+};
+
 router.route('/')
   .get((req, res, next) => {
     const { query } = req;
     if (!query) {
       return next(new ForbiddenError('No query to get media'));
     }
-    Screen.find(query, (err, data) => {
+    Screen.find(query, async (err, data) => {
       if (err) {
         return next(err);
+      }
+      if (query.screen_id && query.app === 'client') {
+        await scheduleScreenStatus(query.screen_id);
       }
       res.json({
         status: true,
@@ -49,7 +79,8 @@ router.route('/')
       playlist_id: null,
       status: SCREEN_STATUS.STOPPED,
       shuffle: isTrue(req.body.screen.screenShuffle),
-      image_duration: req.body.screen.imageDuration
+      image_duration: req.body.screen.imageDuration,
+      active: false
     });
     Screen.findOne({ screen_id: screenId }, (err, existingScreen) => {
       if (err) {
