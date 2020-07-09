@@ -44,11 +44,13 @@ router.route('/')
     if (!query) {
       return next(new ForbiddenError('No query to get media'));
     }
+    const { app } = query;
+    delete query.app;
     Screen.find(query, async (err, data) => {
       if (err) {
         return next(err);
       }
-      if (query.screen_id && query.app === 'client') {
+      if (query.screen_id && app === 'client') {
         await scheduleScreenStatus(query.screen_id);
       }
       res.json({
