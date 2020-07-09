@@ -313,4 +313,12 @@ nav.navbar {
 .card {
     background-color: #212936 !important;
 }
+
+.status-online {
+    color: #45db45;
+}
+
+.status-offline {
+    color: #ce2323;
+}
 /*=== End General =========*/

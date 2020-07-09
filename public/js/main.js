@@ -292,6 +292,10 @@ $(document).ready(() => {
         } else if (screen.status === 'stopped') {
           controlsHtml = controlPlay;
         }
+        let statusActiveHtml = '<i class="fa fa-circle status-offline" aria-hidden="true"></i>';
+        if (screen.active) {
+          statusActiveHtml = '<i class="fa fa-circle status-online" aria-hidden="true"></i>';
+        }
         const screenHtml = `
         <tr data-screenid="${screen._id}" data-screenname="${screen.screen_name}">
             <td>${screen.screen_name}</td>
@@ -304,6 +308,7 @@ $(document).ready(() => {
                 <i class="fa fa-trash-o ml-2 cursor-pointer btnDeleteScreen" title="Delete screen"></i>
             </td>
             <td><span class="badge badge-info">${screen.status}</span></td>
+            <td>${statusActiveHtml}</td>
         </tr>
         `;
         $screenTable.append(screenHtml);
