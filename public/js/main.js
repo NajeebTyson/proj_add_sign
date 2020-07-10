@@ -77,7 +77,7 @@ $(document).ready(() => {
         notifySuccess(`${playlistName}, playlist is created`);
       })
       .fail(function (err) {
-        notifyDanger(err.toString());
+        notifyDanger(err.responseText);
       });
   }
 
@@ -92,7 +92,7 @@ $(document).ready(() => {
         notifySuccess('playlist is deleted');
       })
       .fail(function (err) {
-        notifyDanger(err.toString());
+        notifyDanger(err.responseText);
       });
   }
 
@@ -190,7 +190,7 @@ $(document).ready(() => {
         $playlistAccordion.append(await getPlaylistCard(playlist));
       });
     }).catch(function (err) {
-      notifyDanger(err.toString());
+      notifyDanger(err.responseText);
     });
   }
 
@@ -215,7 +215,7 @@ $(document).ready(() => {
         notifySuccess(`${screenData.screenId}, screen is created`);
       })
       .fail(function (err) {
-        notifyDanger(err.toString());
+        notifyDanger(err.responseText);
       });
   }
 
@@ -375,7 +375,11 @@ $(document).ready(() => {
       notifyDanger('Invalid playlist name');
       return;
     }
-    await addPlaylist(playlistName);
+    try {
+      await addPlaylist(playlistName);
+    } catch (e) {
+      console.error(e);
+    }
     displayPlaylist();
     $playlistInput.val('');
     $('#addPlaylistModal').modal('toggle');
@@ -485,13 +489,17 @@ $(document).ready(() => {
       notifyDanger('Screen codes are not same');
       return;
     }
-    await addScreen({
-      screenId: $inputScreenId.val(),
-      screenName: $inputScreenName.val(),
-      screenCode: $inputScreenCode1.val(),
-      screenShuffle: $switchScreenShuffle.is(':checked'),
-      imageDuration: Number($selectImageTimeDuration.find(':selected').val())
-    });
+    try {
+      await addScreen({
+        screenId: $inputScreenId.val(),
+        screenName: $inputScreenName.val(),
+        screenCode: $inputScreenCode1.val(),
+        screenShuffle: $switchScreenShuffle.is(':checked'),
+        imageDuration: Number($selectImageTimeDuration.find(':selected').val())
+      });
+    } catch (e) {
+      console.error(e);
+    }
     $inputScreenId.val('');
     $inputScreenName.val('');
     $inputScreenCode1.val('');
