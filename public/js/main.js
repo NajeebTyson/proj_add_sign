@@ -77,7 +77,7 @@ $(document).ready(() => {
         notifySuccess(`${playlistName}, playlist is created`);
       })
       .fail(function (err) {
-        notifyDanger(err.responseJSON.error);
+        notifyDanger(err.toString());
       });
   }
 
@@ -92,7 +92,7 @@ $(document).ready(() => {
         notifySuccess('playlist is deleted');
       })
       .fail(function (err) {
-        notifyDanger(err.responseJSON.error);
+        notifyDanger(err.toString());
       });
   }
 
@@ -190,7 +190,7 @@ $(document).ready(() => {
         $playlistAccordion.append(await getPlaylistCard(playlist));
       });
     }).catch(function (err) {
-      notifyDanger(err.responseJSON.error);
+      notifyDanger(err.toString());
     });
   }
 
@@ -215,7 +215,7 @@ $(document).ready(() => {
         notifySuccess(`${screenData.screenId}, screen is created`);
       })
       .fail(function (err) {
-        notifyDanger(err.responseJSON.error);
+        notifyDanger(err.toString());
       });
   }
 
