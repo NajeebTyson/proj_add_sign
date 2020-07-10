@@ -115,6 +115,7 @@ app.use((req, res, next) => {
 app.use('/static/', express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 app.use('/static/js/lib', express.static(path.join(__dirname, 'node_modules/chart.js/dist'), { maxAge: 31557600000 }));
 app.use('/static/js/lib', express.static(path.join(__dirname, 'node_modules/popper.js/dist/umd'), { maxAge: 31557600000 }));
+app.use('/static/object-hash/', express.static(path.join(__dirname, 'node_modules/object-hash'), { maxAge: 31557600000 }));
 app.use('/static/bootstrap/', express.static(path.join(__dirname, 'node_modules/bootstrap'), { maxAge: 31557600000 }));
 app.use('/static/jquery/', express.static(path.join(__dirname, 'node_modules/jquery'), { maxAge: 31557600000 }));
 app.use('/static/webfonts', express.static(path.join(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts'), { maxAge: 31557600000 }));

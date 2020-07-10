@@ -2,7 +2,10 @@
 /* eslint prefer-arrow-callback: 0 */
 /* eslint func-names: 0 */
 $(document).ready(() => {
-  // notifications
+  // ================ Variables ===============================
+  var screenHashValue = '';
+
+  // ================ notifications ===========================
   function notifyDanger(message) {
     $.notify({ message }, { type: 'danger' });
   }
@@ -15,7 +18,7 @@ $(document).ready(() => {
   function notifySuccess(message) {
     $.notify({ message }, { type: 'success' });
   }
-  // ================== Variables ==============================
+  // ================== Constants ==============================
   const $playlistAccordion = $('#accordionPlaylist');
   const $titleMediaAddModal = $('#titleMediaAddModal');
   const $inputMediaFile = $('#inputMediaFile');
@@ -39,6 +42,10 @@ $(document).ready(() => {
   const $btnConfirmDelete = $('#btnConfirmDelete');
   // ================== End Variables ==========================
   // ================== FUNCTIONS ==============================
+  // get hash of object
+  function getHash(obj) {
+    return objectHash(obj);
+  }
   // sleep function
   function sleep(ms) {
     return new Promise(function (resolve) {
@@ -279,6 +286,11 @@ $(document).ready(() => {
   function displayScreen() {
     const screens = getScreens();
     screens.then(function (data) {
+      const newScreenHash = getHash(data);
+      if (newScreenHash === screenHashValue) {
+        return;
+      }
+      screenHashValue = newScreenHash;
       const controlPause = '<i class="fa fa-pause ml-2 cursor-pointer btn-screen-ctrl" data-control="paused" aria-hidden="true" title="Pause"></i>';
       const controlStop = '<i class="fa fa-stop ml-2 cursor-pointer btn-screen-ctrl" data-control="stopped" aria-hidden="true" title="Stop"></i>';
       const controlPlay = '<i class="fa fa-play ml-2 cursor-pointer btn-screen-ctrl" data-control="playing" aria-hidden="true" title="Play"></i>';
@@ -329,7 +341,7 @@ $(document).ready(() => {
         $screenTable.append(screenHtml);
       });
     }).catch(function (err) {
-      notifyDanger(err.responseJSON.error);
+      notifyDanger(err.toString());
     });
   }
   // ================== FUNCTIONS END ==========================
