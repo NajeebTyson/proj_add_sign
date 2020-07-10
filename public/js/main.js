@@ -606,6 +606,6 @@ $(document).ready(() => {
   }
 
   if (window.location.pathname === '/dashboard') {
-    // updateDashboard();
+    updateDashboard();
   }
 });
