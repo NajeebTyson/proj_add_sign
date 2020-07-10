@@ -330,4 +330,13 @@ nav.navbar {
     width: 100%;
     border-top: 2px solid #2b3648;
 }
+
+.flash-error {
+    background-color: #dc3545 !important;
+    margin-bottom: 20px;
+    color: #212936;
+    padding: 5px;
+    font-size: large;
+    border-radius: 4px;
+}
 /*=== End General =========*/

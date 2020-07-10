@@ -385,10 +385,6 @@ $(document).ready(() => {
     $('#addPlaylistModal').modal('toggle');
   });
 
-  // display playlists
-  displayPlaylist();
-  displayScreen();
-
   // delete playlist
   // $playlistAccordion.on('click', '.deletePlaylist', async function () {
   //   const playlistId = $(this).data('playlistid');
@@ -626,6 +622,8 @@ $(document).ready(() => {
   }
 
   if (window.location.pathname === '/dashboard') {
+    displayPlaylist();
+    displayScreen();
     updateDashboard();
   }
 });

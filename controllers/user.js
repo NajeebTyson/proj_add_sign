@@ -76,7 +76,8 @@ exports.getAdminSignup = (req, res) => {
     return res.redirect('/');
   }
   res.render('account/admin_signup', {
-    title: 'Create Account'
+    title: 'Create Account',
+    flashMessage: req.flash('errors')
   });
 };
 
@@ -128,11 +129,13 @@ exports.postAdminSignup = (req, res, next) => {
  * Admin Login page.
  */
 exports.getAdminLogin = (req, res) => {
+  // console.log(req.flash('errors'));
   if (req.user) {
     return res.redirect('/dashboard');
   }
   res.render('account/admin_login', {
-    title: 'Login'
+    title: 'Login',
+    flashMessage: req.flash('errors')
   });
 };
 
