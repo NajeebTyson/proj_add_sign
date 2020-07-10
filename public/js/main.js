@@ -40,6 +40,7 @@ $(document).ready(() => {
   const $btnModalAttachPlaylist = $('#btnModalAttachPlaylist');
   const $modalDeleteConfirmation = $('#deleteConfirmationModal');
   const $btnConfirmDelete = $('#btnConfirmDelete');
+  const $screenAttachPlaylistModal = $('#screenAttachPlaylistModal');
   // ================== End Variables ==========================
   // ================== FUNCTIONS ==============================
   // get hash of object
@@ -538,11 +539,11 @@ $(document).ready(() => {
     const playlistId = $selectModalScreenPlaylistId.find(':selected').val();
     attachPlaylistToScreen(screenId, playlistId).then(function () {
       notifySuccess('Playlist is attached to the screen');
+      displayScreen();
     }).catch(function (err) {
       notifyDanger(`Error in playlist attachment, ${err}`);
     });
-    $('#screenAttachPlaylistModal').modal('toggle');
-    displayScreen();
+    $screenAttachPlaylistModal.modal('toggle');
   });
 
   // change screen control
