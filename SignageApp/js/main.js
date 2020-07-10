@@ -1,6 +1,6 @@
 $(document).ready(function() {
-//	const server = 'http://192.168.10.7:8080';
-	const server = 'https://signage-application.herokuapp.com';
+	const server = 'http://192.168.10.7:8080';
+//	const server = 'https://signage-application.herokuapp.com';
 
 	// constants
 	const CONST_SCREEN_ID = "screenId";
@@ -25,9 +25,9 @@ $(document).ready(function() {
 	const $screenPage = $("#screenPage");
 	const $monitorContent = $("#monitorContent");
 	const $fullScreenPage = $("#fullScreenPage");
-
-
-
+	
+	
+	
 //==================== FUNCTIONS ==========================
 	async function doLogin(screenId, screenCode) {
 		try {
@@ -75,7 +75,7 @@ $(document).ready(function() {
 		}
 		var arr1 = _arr1.concat().sort();
 		var arr2 = _arr2.concat().sort();
-
+	
 		for (var i = 0; i < arr1.length; i++) {
 			if (arr1[i] !== arr2[i])
 				return false;
@@ -161,9 +161,19 @@ $(document).ready(function() {
 		$monitorContent.html('');
 	}
 
-	// display scren stop
+	// display screen stop
 	function displayStoppedScreen() {
 		const stopHtml = '<div class="stopScreen d-flex justify-content-center align-middle"><span>STOPPED</span></div>';
+		if (FULLSCREEN_VIEW) {
+			$fullScreenPage.html(stopHtml);
+		} else {
+			$monitorContent.html(stopHtml);
+		}
+	}
+
+	// display no playlist attached
+	function displayNoPlaylistScreen() {
+		const stopHtml = '<div class="stopScreen d-flex justify-content-center align-middle"><span>NO PLAYLIST</span></div>';
 		if (FULLSCREEN_VIEW) {
 			$fullScreenPage.html(stopHtml);
 		} else {
@@ -182,7 +192,7 @@ $(document).ready(function() {
 			startPlayLoop();
 		}
 	});
-
+	
 	// singing out
 	$btnSignout.click(function() {
 		$screenPage.addClass("d-none");
@@ -236,7 +246,7 @@ $(document).ready(function() {
 				let videoIsplaying = true;
 				document.addEventListener('ended', function(e){
 					console.log('ended event occurred')
-					videoIsplaying = false;
+					videoIsplaying = false;	
 				}, true);
 				while (videoIsplaying) {
 					let vidHtml;
@@ -290,7 +300,9 @@ $(document).ready(function() {
 				const playlistId = screenDoc.playlist_id;
 				if (!playlistId) {
 					console.log('No playlist attached');
-					return;
+					displayNoPlaylistScreen();
+					await sleep(10000);
+					continue;
 				}
 
 				const playlistData = await getPlaylist(playlistId);
@@ -300,7 +312,7 @@ $(document).ready(function() {
 				}
 				const playlistDoc = playlistData.data[0];
 				PLAYLIST_OBJ = playlistDoc;
-
+				
 				const res = await playMedia(playlistDoc);
 			} catch(err) {
 				console.log('Error: ', err);
@@ -338,7 +350,7 @@ $(document).ready(function() {
 			}
         }
     }
-
+    
     // add eventListener for tizenhwkey (Back Button)
 	document.addEventListener('tizenhwkey', backEvent);
 	$(document).on('keydown', function(event) {
