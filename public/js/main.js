@@ -35,6 +35,8 @@ $(document).ready(() => {
   const $switchScreenShuffle = $('#switchScreenShuffle');
   const $selectModalScreenPlaylistId = $('#selectModalScreenPlaylistId');
   const $btnModalAttachPlaylist = $('#btnModalAttachPlaylist');
+  const $modalDeleteConfirmation = $('#deleteConfirmationModal');
+  const $btnConfirmDelete = $('#btnConfirmDelete');
   // ================== End Variables ==========================
   // ================== FUNCTIONS ==============================
   // sleep function
@@ -127,7 +129,10 @@ $(document).ready(() => {
       + '      <h2 class="mb-0">'
       + `         <button class="btn btn-link float-left" type="button" data-toggle="collapse" data-target="#collapse_${playlist._id}" aria-expanded="true" aria-controls="collapse_${playlist._id}"> ${playlist.name} </button>`
       + '      </h2>'
-      + `      <a class="btn btn-danger float-right btn-sm deletePlaylist" data-playlistid="${playlist._id}" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i> &nbsp;Delete </a>`
+      + `      <a class="btn btn-danger float-right btn-sm deletePlaylist" data-toggle="modal" data-target="#deleteConfirmationModal" data-itemid="${playlist._id}" data-item="playlist" data-itemname="${playlist.name}" href="#">`
+      + '        <i class="fa fa-trash-o" aria-hidden="true"></i>'
+      + '        &nbsp;Delete'
+      + '      </a>'
       + `      <a class="btn btn-primary float-right btn-sm addMediaToPlaylist" data-playlistid="${playlist._id}" data-playlistname="${playlist.name}" href="#"  data-toggle="modal" data-target="#addMediaModal">`
       + '          <i class="fa fa-plus" aria-hidden="true"></i>'
       + '           &nbsp;Add Media'
@@ -315,7 +320,7 @@ $(document).ready(() => {
                 ${attachmentHtml}
                 <i class="fa fa-bars ml-2 cursor-pointer btnScreenAttachPlaylist" data-toggle="modal"
                     data-target="#screenAttachPlaylistModal" aria-hidden="true" title="Attach playlist"></i>
-                <i class="fa fa-trash-o ml-2 cursor-pointer btnDeleteScreen" title="Delete screen"></i>
+                <i class="fa fa-trash-o ml-2 cursor-pointer btnDeleteScreen" data-toggle="modal" data-target="#deleteConfirmationModal" data-item="screen" data-itemid="${screen._id}" data-itemname="${screen.screen_name}" title="Delete screen"></i>
             </td>
             <td><span class="badge badge-info">${screen.status}</span></td>
             <td>${statusActiveHtml}</td>
@@ -369,11 +374,11 @@ $(document).ready(() => {
   displayScreen();
 
   // delete playlist
-  $playlistAccordion.on('click', '.deletePlaylist', async function () {
-    const playlistId = $(this).data('playlistid');
-    await deletePlaylist({ _id: playlistId });
-    displayPlaylist();
-  });
+  // $playlistAccordion.on('click', '.deletePlaylist', async function () {
+  //   const playlistId = $(this).data('playlistid');
+  //   await deletePlaylist({ _id: playlistId });
+  //   displayPlaylist();
+  // });
 
   // event to attach playlist id to modal
   $playlistAccordion.on('click', '.addMediaToPlaylist', function () {
@@ -485,15 +490,15 @@ $(document).ready(() => {
   });
 
   // delete screen
-  $screenTable.on('click', '.btnDeleteScreen', async function () {
-    const screenId = $(this).parent().parent().data('screenid');
-    try {
-      await deleteScreen({ _id: screenId });
-      displayScreen();
-    } catch (err) {
-      notifyWarning(`Error deleting screen: ${err}`);
-    }
-  });
+  // $screenTable.on('click', '.btnDeleteScreen', async function () {
+  //   const screenId = $(this).parent().parent().data('screenid');
+  //   try {
+  //     await deleteScreen({ _id: screenId });
+  //     displayScreen();
+  //   } catch (err) {
+  //     notifyWarning(`Error deleting screen: ${err}`);
+  //   }
+  // });
 
   // attach screen id to attach playlist modal
   $screenTable.on('click', '.btnScreenAttachPlaylist', function () {
@@ -548,6 +553,49 @@ $(document).ready(() => {
     });
   });
 
+  // delete confirmation event
+  $modalDeleteConfirmation.on('show.bs.modal', function (event) {
+    const button = $(event.relatedTarget);
+    const item = button.data('item');
+    const itemId = button.data('itemid');
+    const itemName = button.data('itemname');
+    const modal = $(this);
+
+    let title;
+    let body;
+    if (item === 'playlist') {
+      title = 'Confirm delete playlist';
+      body = `Are you sure you want to delete playlist: ${itemName}`;
+    } else if (item === 'screen') {
+      title = 'Confirm delete screen';
+      body = `Are you sure you want to delete screen: ${itemName}`;
+    } else {
+      modal.modal('toggle');
+      notifyWarning(`Invalid item to delete, item: ${item}`);
+      return false;
+    }
+    modal.find('.modal-title').text(title);
+    modal.find('.modal-body').text(body);
+
+    modal.find('#btnConfirmDelete').attr('data-itemid', itemId).attr('data-item', item);
+  });
+
+  // confirm delete event
+  $btnConfirmDelete.click(async function () {
+    const item = $(this).attr('data-item');
+    const itemId = $(this).attr('data-itemid');
+
+    if (item === 'playlist') {
+      await deletePlaylist({ _id: itemId });
+      displayPlaylist();
+    } else if (item === 'screen') {
+      await deleteScreen({ _id: itemId });
+      displayScreen();
+    }
+    $modalDeleteConfirmation.modal('toggle');
+  });
+
+  // update dashboard content
   async function updateDashboard() {
     while (window.location.pathname === '/dashboard') {
       // displayPlaylist();
@@ -558,7 +606,6 @@ $(document).ready(() => {
   }
 
   if (window.location.pathname === '/dashboard') {
-    updateDashboard();
+    // updateDashboard();
   }
-
 });
