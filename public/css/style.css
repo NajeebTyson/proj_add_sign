@@ -321,4 +321,9 @@ nav.navbar {
 .status-offline {
     color: #ce2323;
 }
+
+.sidebar-hr {
+    width: 100%;
+    border-top: 2px solid #2b3648;
+}
 /*=== End General =========*/
