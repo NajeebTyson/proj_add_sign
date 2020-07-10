@@ -37,6 +37,10 @@ nav.navbar {
     border-color: #009E78;
 }
 
+.pd-30 {
+    padding: 30px;
+}
+
 /*----------------toggeled sidebar----------------*/
 .page-wrapper.toggled .sidebar-wrapper {
     left: 0px;
