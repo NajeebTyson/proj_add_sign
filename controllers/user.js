@@ -129,7 +129,6 @@ exports.postAdminSignup = (req, res, next) => {
  * Admin Login page.
  */
 exports.getAdminLogin = (req, res) => {
-  // console.log(req.flash('errors'));
   if (req.user) {
     return res.redirect('/dashboard');
   }

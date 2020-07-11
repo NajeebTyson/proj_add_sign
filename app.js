@@ -35,6 +35,7 @@ const { HttpCodes } = require('./controllers/utils/error');
  */
 const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
+const clientController = require('./controllers/client');
 const apiController = require('./controllers/api');
 // const contactController = require('./controllers/contact');
 
@@ -139,6 +140,12 @@ app.post('/admin-signup', userController.postAdminSignup);
 app.get('/admin-login', userController.getAdminLogin);
 app.post('/admin-login', userController.postAdminLogin);
 app.get('/logout', userController.logout);
+
+/**
+ * Client app routes
+ */
+app.get('/app-login', clientController.getClientAppLogin);
+app.get('/app', clientController.getAppPage);
 
 /**
  * API examples routes.
