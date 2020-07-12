@@ -147,6 +147,16 @@ $(document).ready(() => {
     }
   }
 
+  // display No media screen
+  function displayNoMediaScreen() {
+    const stopHtml = '<div class="stopScreen d-flex justify-content-center align-middle"><span>NO MEDIA</span></div>';
+    if (FULLSCREEN_VIEW) {
+      $fullScreenPage.html(stopHtml);
+    } else {
+      $monitorContent.html(stopHtml);
+    }
+  }
+
   // display screen deleted
   function displayScreenNotAvailable() {
     const stopHtml = '<div class="not-available-screen d-flex justify-content-center align-middle"><span>SCREEN NOT AVAILABLE</span></div>';
@@ -159,7 +169,7 @@ $(document).ready(() => {
 
   // display no playlist attached
   function displayNoPlaylistScreen() {
-    const stopHtml = '<div class="stopScreen d-flex justify-content-center align-middle"><span>NO PLAYLIST</span></div>';
+    const stopHtml = '<div class="not-available-screen d-flex justify-content-center align-middle"><span>NO PLAYLIST</span></div>';
     if (FULLSCREEN_VIEW) {
       $fullScreenPage.html(stopHtml);
     } else {
@@ -199,6 +209,11 @@ $(document).ready(() => {
 
   async function playMedia(playlist) {
     setupPlaylist(playlist);
+    if (CURRENT_PLAYLIST_SETUP.length <= 0) {
+      displayNoMediaScreen();
+      await sleep(SCREEN_OBJ.image_duration * 1000);
+      return;
+    }
 
     const mediaId = CURRENT_PLAYLIST_SETUP[CURRENT_MEDIA_IDX];
     try {
