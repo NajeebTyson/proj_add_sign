@@ -32,6 +32,10 @@ $(document).ready(() => {
     return $.get(`${server}/api/screen`, query);
   }
 
+  async function screenHeartbeat(query) {
+    return $.get(`${server}/api/screen/heartbeat`, query);
+  }
+
   async function getPlaylist(playlistId) {
     return $.get(`${server}/api/playlist`, { _id: playlistId });
   }
@@ -241,6 +245,7 @@ $(document).ready(() => {
           console.log('ended event occurred');
           videoIsplaying = false;
         }, true);
+        let counter = 1;
         while (videoIsplaying) {
           let vidHtml;
           if (FULLSCREEN_VIEW) {
@@ -253,6 +258,10 @@ $(document).ready(() => {
               videoIsplaying = false;
             });
             break;
+          }
+          counter = counter + 1;
+          if (counter % 2 === 0) {
+            screenHeartbeat({ screen_id: SCREEN_ID, app: 'client' });
           }
           console.log('video, sleeping for 5');
           await sleep(5000);
