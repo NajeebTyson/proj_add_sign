@@ -47,7 +47,7 @@ $(document).ready(() => {
   });
 
   // auto Login
-  function checkAutoLogin() {
+  async function checkAutoLogin() {
     if (localStorage.getItem(CONST_SCREEN_ID) && localStorage.getItem(CONST_SCREEN_CODE)) {
       // eslint-disable-next-line max-len
       const loginRes = await loginAction(localStorage.getItem(CONST_SCREEN_ID), localStorage.getItem(CONST_SCREEN_CODE));
