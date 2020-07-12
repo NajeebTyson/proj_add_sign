@@ -351,6 +351,12 @@ $(document).ready(() => {
   if (checkLoggedIn()) {
     document.body.addEventListener('keydown', keyEvent);
 
+    $(document).dblclick(function () {
+      if (FULLSCREEN_VIEW) {
+        exitFullScreen();
+      }
+    });
+
     SCREEN_ID = localStorage.getItem(CONST_SCREEN_ID);
     console.log('starting play loop');
     startPlayLoop();
