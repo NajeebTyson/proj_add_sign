@@ -22,7 +22,7 @@ const scheduleScreenJob = (jobName, screenId) => {
     logger.info(`Screen [${job.attrs.data.screen_id}] is offline now.`);
     job.remove();
   });
-  agenda.schedule('ten minutes', jobName, { screen_id: screenId });
+  agenda.schedule('one minute', jobName, { screen_id: screenId });
   logger.info(`Screen [${screenId}] is active now.`);
 };
 
