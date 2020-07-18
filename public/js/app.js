@@ -50,8 +50,7 @@ $(document).ready(() => {
     if (media.type === 'image') {
       mediaHtml = `<img class="content-monitor d-block align-middle img-fluid mx-auto" src="${mediaUrl}">`;
     } else if (media.type === 'video') {
-      mediaHtml = `<video id="videoContent" class="content-monitor" autoplay><source src="${mediaUrl}" type="video/mp4">Does not support the video tag.</video>`;
-      // mediaHtml = `<video class="content-monitor" src="${mediaUrl}" class="embed-responsive-item">Does not support HTML5 video. </video>`;
+      mediaHtml = `<video id="videoContent" class="content-monitor" src="${mediaUrl}" type="${media.type}/${media.extension}" autoplay></video>`;
     }
     return mediaHtml;
   }
@@ -240,6 +239,7 @@ $(document).ready(() => {
       } else if (CURRENT_MEDIA.type === 'video') {
         console.log('video is playing');
         await sleep(1000);
+        $('#monitorContent > video')[0].play();
         let videoIsplaying = true;
         document.addEventListener('ended', (e) => {
           console.log('ended event occurred');
