@@ -407,6 +407,7 @@ $(document).ready(() => {
   $inputMediaFile.fileupload({
     dataType: 'json',
     multipart: true,
+    timeout: 600000,
     add(e, data) {
       data.context = $('<p class="file-upload">')
         .append($('<a target="_blank">').text(data.files[0].name))
