@@ -58,10 +58,18 @@ body {
 
 .monitor-container > img {
     object-fit: cover;
+    width: inherit;
+    /*height: 100vh;*/
+    display: flex;
+    margin: 0 auto;
 }
 
 .monitor-container > video {
     object-fit: cover;
+    width: inherit;
+    /*height: 100vh;*/
+    display: flex;
+    margin: 0 auto;
 }
 
 /*#monitorContent .content-monitor {*/
