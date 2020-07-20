@@ -240,12 +240,20 @@ $(document).ready(() => {
       } else if (CURRENT_MEDIA.type === 'video') {
         console.log('video is playing');
         await sleep(1000);
-        // $('#monitorContent > video')[0].play();
         let videoIsplaying = true;
-        document.addEventListener('ended', (e) => {
-          console.log('ended event occurred');
+        try {
+          $('video')[0].on('error', () => {
+            console.log('Error playing video, id: ', mediaId);
+          });
+          document.addEventListener('ended', (e) => {
+            console.log('ended event occurred');
+            videoIsplaying = false;
+          }, true);
+        } catch (e) {
+          console.log('Error playing video, error: ', e.toString());
+        } finally {
           videoIsplaying = false;
-        }, true);
+        }
         let counter = 1;
         while (videoIsplaying) {
           let vidHtml;
