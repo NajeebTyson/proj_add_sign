@@ -109,6 +109,7 @@ $(document).ready(() => {
     } else if (elem.msRequestFullscreen) { /* IE/Edge */
       elem.msRequestFullscreen();
     }
+    $fullScreenPage.autoHideMouseCursor(3000);
   }
 
   function isInFullscreen() {
@@ -117,6 +118,7 @@ $(document).ready(() => {
 
   // exit full screen
   function exitFullScreen() {
+    $fullScreenPage.data('autoHideMouseCursor').destory();
     console.log('Exiting full screen');
     if (isInFullscreen()) {
       if (document.exitFullscreen) {
@@ -337,7 +339,7 @@ $(document).ready(() => {
   // start play loop
   function startPlayLoop() {
     SCREEN_STATUS = true;
-    // openFullscreen();
+    openFullscreen();
     playLoop();
   }
 
