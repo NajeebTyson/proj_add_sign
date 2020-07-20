@@ -46,12 +46,13 @@ $(document).ready(() => {
 
   function getHtmlMedia(media) {
     const mediaUrl = `${server}/static/media/${media.saved_name}`;
-    let mediaHtml = '';
+    let mediaHtml = '<div class="monitor-container">';
     if (media.type === 'image') {
-      mediaHtml = `<img class="content-monitor d-block align-middle img-fluid mx-auto" src="${mediaUrl}">`;
+      mediaHtml += `<img class="content-monitor d-block align-middle img-fluid mx-auto" src="${mediaUrl}">`;
     } else if (media.type === 'video') {
-      mediaHtml = `<video id="videoContent" class="content-monitor" src="${mediaUrl}" type="${media.type}/${media.extension}" autoplay></video>`;
+      mediaHtml += `<video id="videoContent" class="content-monitor" src="${mediaUrl}" type="${media.type}/${media.extension}" autoplay></video>`;
     }
+    mediaHtml += '</div>';
     return mediaHtml;
   }
 
@@ -239,7 +240,7 @@ $(document).ready(() => {
       } else if (CURRENT_MEDIA.type === 'video') {
         console.log('video is playing');
         await sleep(1000);
-        $('#monitorContent > video')[0].play();
+        // $('#monitorContent > video')[0].play();
         let videoIsplaying = true;
         document.addEventListener('ended', (e) => {
           console.log('ended event occurred');
@@ -328,7 +329,7 @@ $(document).ready(() => {
   // start play loop
   function startPlayLoop() {
     SCREEN_STATUS = true;
-    openFullscreen();
+    // openFullscreen();
     playLoop();
   }
 
