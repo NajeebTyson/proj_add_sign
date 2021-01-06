@@ -46,12 +46,13 @@ $(document).ready(() => {
 
   function getHtmlMedia(media) {
     const mediaUrl = `${server}/static/media/${media.saved_name}`;
-    let mediaHtml = '';
+    let mediaHtml = '<div class="monitor-container">';
     if (media.type === 'image') {
-      mediaHtml = `<img class="content-monitor d-block align-middle img-fluid mx-auto" src="${mediaUrl}">`;
+      mediaHtml += `<img class="content-monitor d-block align-middle img-fluid mx-auto" src="${mediaUrl}">`;
     } else if (media.type === 'video') {
-      mediaHtml = `<video id="videoContent" class="content-monitor" src="${mediaUrl}" type="${media.type}/${media.extension}" autoplay></video>`;
+      mediaHtml += `<video id="videoContent" class="content-monitor" src="${mediaUrl}" type="${media.type}/${media.extension}" autoplay></video>`;
     }
+    mediaHtml += '</div>';
     return mediaHtml;
   }
 
@@ -108,6 +109,7 @@ $(document).ready(() => {
     } else if (elem.msRequestFullscreen) { /* IE/Edge */
       elem.msRequestFullscreen();
     }
+    $fullScreenPage.autoHideMouseCursor(3000);
   }
 
   function isInFullscreen() {
@@ -116,6 +118,7 @@ $(document).ready(() => {
 
   // exit full screen
   function exitFullScreen() {
+    $fullScreenPage.data('autoHideMouseCursor').destory();
     console.log('Exiting full screen');
     if (isInFullscreen()) {
       if (document.exitFullscreen) {
@@ -239,12 +242,20 @@ $(document).ready(() => {
       } else if (CURRENT_MEDIA.type === 'video') {
         console.log('video is playing');
         await sleep(1000);
-        $('#monitorContent > video')[0].play();
         let videoIsplaying = true;
-        document.addEventListener('ended', (e) => {
-          console.log('ended event occurred');
+        try {
+          $('video')[0].on('error', () => {
+            console.log('Error playing video, id: ', mediaId);
+          });
+          document.addEventListener('ended', (e) => {
+            console.log('ended event occurred');
+            videoIsplaying = false;
+          }, true);
+        } catch (e) {
+          console.log('Error playing video, error: ', e.toString());
+        } finally {
           videoIsplaying = false;
-        }, true);
+        }
         let counter = 1;
         while (videoIsplaying) {
           let vidHtml;

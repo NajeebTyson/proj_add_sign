@@ -1,6 +1,7 @@
 
 body {
     background-color: #222;
+    overflow: hidden;
 }
 
 #container {
@@ -36,7 +37,7 @@ body {
 
 #monitorscreen {
     position: relative;
-    background-color: #777;
+    background-color: black;
     background-size: cover;
     background-position: top center;
     height: 0;
@@ -50,9 +51,31 @@ body {
     width: 100%;
 }
 
-#monitorContent .content-monitor {
+.monitor-container {
+    display: flex;
     width: 100%;
+    /*height: 100vh;*/
 }
+
+.monitor-container > img {
+    object-fit: cover;
+    width: inherit;
+    /*height: 100vh;*/
+    display: flex;
+    margin: 0 auto;
+}
+
+.monitor-container > video {
+    object-fit: cover;
+    width: inherit;
+    /*height: 100vh;*/
+    display: flex;
+    margin: 0 auto;
+}
+
+/*#monitorContent .content-monitor {*/
+/*    width: 100%;*/
+/*}*/
 
 #monitorControl {
     width: 160px;
@@ -164,17 +187,17 @@ ul li a:hover {
     background-color: #222;
 }
 
-#fullScreenPage {
-    align-items: center;
-}
+/*#fullScreenPage {*/
+/*    align-items: center;*/
+/*}*/
 
-#fullScreenPage img {
-    width: 100%;
-}
+/*#fullScreenPage img {*/
+/*    width: 100%;*/
+/*}*/
 
-#fullScreenPage video {
-    width: 100%;
-}
+/*#fullScreenPage video {*/
+/*    width: 100%;*/
+/*}*/
 
 .stopScreen {
     color: #595858;
